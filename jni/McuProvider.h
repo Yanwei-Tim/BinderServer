@@ -88,6 +88,16 @@ public:
 	void set_settings_audio_mode(int mode);
 
 
+//system info
+	bool check_system_info_changed();
+	bool get_system_info(Parcel& to);
+	void set_system_acc_state(bool accon);
+	bool get_system_acc_state();
+	void set_system_source(int source);
+	int get_system_source();
+	void set_system_state(int state);
+	int get_system_state();
+
 	
 private:
 	S_MCU_DATA_ALLINFO m_pMcuData;

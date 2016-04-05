@@ -99,7 +99,7 @@ bool McuCommands::isHangLongCustomer()
 
 bool McuCommands::sendBeepToMcu(int beep)
 {
-	u_c buffSendData[6] = {0xFF,0xAA,0x89,0x00,beep,0x0A};
+	u_c buffSendData[6] = {0xFF,0xAA,0x89,0x00,(u_c)beep,0x0A};
 	getUart()->writeUart(buffSendData,6);
 	return(0);
 }
@@ -487,7 +487,7 @@ void McuCommands::sendReqWheelMax()
 
 void McuCommands::sendSourceToMcu(int source)
 {
-	u_c buffSendData[6] = {0xFF,0xAA,ARM_RECEIVE_SOURCE,source,0x00,0x0A};
+	u_c buffSendData[6] = {0xFF,0xAA,ARM_RECEIVE_SOURCE,(u_c)source,0x00,0x0A};
 	getUart()->writeUart(buffSendData,6);
 }
 

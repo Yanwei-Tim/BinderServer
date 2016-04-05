@@ -5,6 +5,8 @@
 
 #include "McuService.h"
 
+class McuReader;
+
 using namespace android;
 
 class NotifyDispatcher : public Thread

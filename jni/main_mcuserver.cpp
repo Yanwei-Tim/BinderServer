@@ -28,13 +28,12 @@
 #include <utils/Log.h>
 #include "RegisterExtensions.h"
 
-#include "McuService.h"
 
+#include "McuService.h"
 #include "mcu_uart/CMCUUart.h"
 #include "McuReader.h"
 #include "McuWriter.h"
 #include "NotifyDispatcher.h"
-
 #include "BTReader.h"
 #include "BTWriter.h"
 
@@ -52,30 +51,48 @@ int main(int argc, char** argv)
 	
     registerExtensions();
 
+	//mcu 
+	//here can not use '{}', 
+	//otherwise mcuserver will call ~McuService method as well as McuReader and McuWriter
 	CMCUUart* mcu_uart = new CMCUUart();
-	sp<McuReader> mcu_reader = new McuReader(mcu_uart);
+	sp<McuReader> mcu_reader = new McuReader(mcu_uart, ms);
 	sp<McuWriter> mcu_writer = new McuWriter(mcu_uart, mcu_reader);
+	
 	ms->setMcuWriter(mcu_writer);
 	ms->setMcuReader(mcu_reader);
 
 	sp<NotifyDispatcher> dispatcher = new NotifyDispatcher(ms, mcu_reader);
-	 
-	if(mcu_uart->openUartDev(MCU_UART_NAME,B115200))
+	
+	char mcu_path[PROP_VALUE_MAX+5] = {0};
+	memcpy(mcu_path, "/dev/", 5);
+	property_get("ro.kernel.android.mcu", &mcu_path[5], "ttyS1");
+	ALOGI("mcu_path: %s", mcu_path);
+	
+	if(mcu_uart->openUartDev(mcu_path,B115200))
 	{
 		mcu_writer->start_write_mcu_data_loop();
 		mcu_reader->start_read_mcu_data_loop();
 		dispatcher->start_dispatch_mcu_data_loop();
 	}
-	
+
+	/*
+	//bt
 	CMCUUart* bt_uart = new CMCUUart();
 	bt_uart->enabledDebug(true);
 	sp<BTReader> bt_reader = new BTReader(bt_uart);
 	sp<BTWriter> bt_writer = new BTWriter(bt_uart, bt_reader);
-	if(bt_uart->openUartDev(BT_UART_NAME,B9600))
+
+	char bt_path[PROP_VALUE_MAX+5] = {0};
+	memcpy(bt_path, "/dev/", 5);
+	property_get("ro.kernel.android.bt", &bt_path[5], "ttyS3");
+	ALOGI("bt_path: %s", bt_path);
+	
+	if(bt_uart->openUartDev(bt_path,B9600))
 	{
 		bt_reader->start_read_bt_data_loop();
 		bt_writer->start_write_bt_data_loop();
 	}
+	*/
 	
     ProcessState::self()->startThreadPool();
     IPCThreadState::self()->joinThreadPool();

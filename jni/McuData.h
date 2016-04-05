@@ -237,8 +237,15 @@ typedef struct
 	BYTE radarSwitch;
 	bool bInAJX;  
 	char customer_id[20];
-}S_MCU_DATA_SYSINFO;
+}S_MCU_DATA_SETTINGS;
 
+typedef struct 
+{
+	bool accon;
+	int source;
+	int state;
+
+} S_MCU_DATA_SYSTEM;
 
 typedef struct 
 {
@@ -355,8 +362,8 @@ typedef struct
 	S_MCU_DATA_RADIO sRadio;
 	S_MCU_CAN_DATA_INFO sCanInfo;
 	//S_MCU_DATA_VIDEO sVideo;
-	S_MCU_DATA_SYSINFO sSystem;
-	
+	S_MCU_DATA_SETTINGS sSettins;
+	S_MCU_DATA_SYSTEM sSystem;
 	//S_MCU_DATA_MEDIA sArmMedia;
 	S_MCU_DATA_CDC sCdc;
 	S_MCU_ARMSAVE_DATA_INFO sArmSaveData;

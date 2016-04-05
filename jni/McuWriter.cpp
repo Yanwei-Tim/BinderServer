@@ -13,7 +13,7 @@ McuWriter::McuWriter(CMCUUart* mcuuart, sp<McuReader>& reader)
 }
 McuWriter::~McuWriter()
 {
-	
+	ALOGI("mcu writer  destory...");
 }
 
 void McuWriter::start_write_mcu_data_loop()

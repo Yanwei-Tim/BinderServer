@@ -28,7 +28,7 @@ S_MCU_DATA_ALLINFO* McuProvider::getLastMcuDataPtr()
 bool McuProvider::is_mcu_beep_enabled()
 {
 	S_MCU_DATA_ALLINFO* mcup = getMcuDataPtr();
-	return mcup->sSystem.bBeep;
+	return mcup->sSettins.bBeep;
 }
 
 
@@ -160,35 +160,35 @@ void McuProvider::set_radio_legal_freq(int freq)
 
 bool McuProvider::checkSettingsInfoChanged()
 {
-	if(getLastMcuDataPtr()->sSystem.bright != getMcuDataPtr()->sSystem.bright
-		|| getLastMcuDataPtr()->sSystem.vol != getMcuDataPtr()->sSystem.vol
-		|| getLastMcuDataPtr()->sSystem.bBeep != getMcuDataPtr()->sSystem.bBeep
-		|| getLastMcuDataPtr()->sSystem.treb != getMcuDataPtr()->sSystem.treb
-		|| getLastMcuDataPtr()->sSystem.mid != getMcuDataPtr()->sSystem.mid
-		|| getLastMcuDataPtr()->sSystem.bass != getMcuDataPtr()->sSystem.bass
-		|| getLastMcuDataPtr()->sSystem.fade != getMcuDataPtr()->sSystem.fade
-		|| getLastMcuDataPtr()->sSystem.bal != getMcuDataPtr()->sSystem.bal
-		|| getLastMcuDataPtr()->sSystem.bMute != getMcuDataPtr()->sSystem.bMute
-		|| getLastMcuDataPtr()->sSystem.btVol != getMcuDataPtr()->sSystem.btVol
-		|| getLastMcuDataPtr()->sSystem.gpsVol != getMcuDataPtr()->sSystem.gpsVol
-		|| getLastMcuDataPtr()->sSystem.defVol != getMcuDataPtr()->sSystem.defVol
-		|| getLastMcuDataPtr()->sSystem.audioMode != get_settings_audio_mode()
+	if(getLastMcuDataPtr()->sSettins.bright != getMcuDataPtr()->sSettins.bright
+		|| getLastMcuDataPtr()->sSettins.vol != getMcuDataPtr()->sSettins.vol
+		|| getLastMcuDataPtr()->sSettins.bBeep != getMcuDataPtr()->sSettins.bBeep
+		|| getLastMcuDataPtr()->sSettins.treb != getMcuDataPtr()->sSettins.treb
+		|| getLastMcuDataPtr()->sSettins.mid != getMcuDataPtr()->sSettins.mid
+		|| getLastMcuDataPtr()->sSettins.bass != getMcuDataPtr()->sSettins.bass
+		|| getLastMcuDataPtr()->sSettins.fade != getMcuDataPtr()->sSettins.fade
+		|| getLastMcuDataPtr()->sSettins.bal != getMcuDataPtr()->sSettins.bal
+		|| getLastMcuDataPtr()->sSettins.bMute != getMcuDataPtr()->sSettins.bMute
+		|| getLastMcuDataPtr()->sSettins.btVol != getMcuDataPtr()->sSettins.btVol
+		|| getLastMcuDataPtr()->sSettins.gpsVol != getMcuDataPtr()->sSettins.gpsVol
+		|| getLastMcuDataPtr()->sSettins.defVol != getMcuDataPtr()->sSettins.defVol
+		|| getLastMcuDataPtr()->sSettins.audioMode != get_settings_audio_mode()
 		)
 	{
 
-		getLastMcuDataPtr()->sSystem.bright = getMcuDataPtr()->sSystem.bright;
-		getLastMcuDataPtr()->sSystem.vol = getMcuDataPtr()->sSystem.vol;
-		getLastMcuDataPtr()->sSystem.bBeep = getMcuDataPtr()->sSystem.bBeep;
-		getLastMcuDataPtr()->sSystem.treb = getMcuDataPtr()->sSystem.treb;
-		getLastMcuDataPtr()->sSystem.mid = getMcuDataPtr()->sSystem.mid;
-		getLastMcuDataPtr()->sSystem.bass = getMcuDataPtr()->sSystem.bass;
-		getLastMcuDataPtr()->sSystem.fade = getMcuDataPtr()->sSystem.fade;
-		getLastMcuDataPtr()->sSystem.bal = getMcuDataPtr()->sSystem.bal;
-		getLastMcuDataPtr()->sSystem.bMute = getMcuDataPtr()->sSystem.bMute;
-		getLastMcuDataPtr()->sSystem.btVol = getMcuDataPtr()->sSystem.btVol;
-		getLastMcuDataPtr()->sSystem.gpsVol = getMcuDataPtr()->sSystem.gpsVol;
-		getLastMcuDataPtr()->sSystem.defVol = get_settings_defvol();
-		getLastMcuDataPtr()->sSystem.audioMode = get_settings_audio_mode();
+		getLastMcuDataPtr()->sSettins.bright = getMcuDataPtr()->sSettins.bright;
+		getLastMcuDataPtr()->sSettins.vol = getMcuDataPtr()->sSettins.vol;
+		getLastMcuDataPtr()->sSettins.bBeep = getMcuDataPtr()->sSettins.bBeep;
+		getLastMcuDataPtr()->sSettins.treb = getMcuDataPtr()->sSettins.treb;
+		getLastMcuDataPtr()->sSettins.mid = getMcuDataPtr()->sSettins.mid;
+		getLastMcuDataPtr()->sSettins.bass = getMcuDataPtr()->sSettins.bass;
+		getLastMcuDataPtr()->sSettins.fade = getMcuDataPtr()->sSettins.fade;
+		getLastMcuDataPtr()->sSettins.bal = getMcuDataPtr()->sSettins.bal;
+		getLastMcuDataPtr()->sSettins.bMute = getMcuDataPtr()->sSettins.bMute;
+		getLastMcuDataPtr()->sSettins.btVol = getMcuDataPtr()->sSettins.btVol;
+		getLastMcuDataPtr()->sSettins.gpsVol = getMcuDataPtr()->sSettins.gpsVol;
+		getLastMcuDataPtr()->sSettins.defVol = get_settings_defvol();
+		getLastMcuDataPtr()->sSettins.audioMode = get_settings_audio_mode();
 		return true;
 	}
 	else
@@ -199,146 +199,194 @@ bool McuProvider::checkSettingsInfoChanged()
 bool McuProvider::get_settings_info(Parcel& to)
 {
 	to.setDataPosition(0);
-	to.writeInt32(getMcuDataPtr()->sSystem.bright);
-	to.writeInt32(getMcuDataPtr()->sSystem.vol);
-	to.writeInt32(getMcuDataPtr()->sSystem.bBeep);
-	to.writeInt32(getMcuDataPtr()->sSystem.treb);
-	to.writeInt32(getMcuDataPtr()->sSystem.mid);
-	to.writeInt32(getMcuDataPtr()->sSystem.bass);
-	to.writeInt32(getMcuDataPtr()->sSystem.fade);
-	to.writeInt32(getMcuDataPtr()->sSystem.bal);
-	to.writeInt32(getMcuDataPtr()->sSystem.bMute);
+	to.writeInt32(getMcuDataPtr()->sSettins.bright);
+	to.writeInt32(getMcuDataPtr()->sSettins.vol);
+	to.writeInt32(getMcuDataPtr()->sSettins.bBeep);
+	to.writeInt32(getMcuDataPtr()->sSettins.treb);
+	to.writeInt32(getMcuDataPtr()->sSettins.mid);
+	to.writeInt32(getMcuDataPtr()->sSettins.bass);
+	to.writeInt32(getMcuDataPtr()->sSettins.fade);
+	to.writeInt32(getMcuDataPtr()->sSettins.bal);
+	to.writeInt32(getMcuDataPtr()->sSettins.bMute);
 
-	to.writeInt32(getMcuDataPtr()->sSystem.btVol);
-	to.writeInt32(getMcuDataPtr()->sSystem.gpsVol);
-	to.writeInt32(getMcuDataPtr()->sSystem.defVol);
+	to.writeInt32(getMcuDataPtr()->sSettins.btVol);
+	to.writeInt32(getMcuDataPtr()->sSettins.gpsVol);
+	to.writeInt32(getMcuDataPtr()->sSettins.defVol);
 	to.writeInt32(get_settings_audio_mode());
 	return true;
 }
 
 int McuProvider::get_settings_brightness()
 {
-	return getMcuDataPtr()->sSystem.bright;
+	return getMcuDataPtr()->sSettins.bright;
 }
 int McuProvider::get_settings_navi_max()
 {
 	return 1;
-	//return getMcuDataPtr()->sSystem.;
+	//return getMcuDataPtr()->sSettins.;
 }
 int McuProvider::get_settings_volume()
 {
-	return getMcuDataPtr()->sSystem.vol;
+	return getMcuDataPtr()->sSettins.vol;
 }
 int McuProvider::get_settings_btvol()
 {
-	return getMcuDataPtr()->sSystem.btVol;
+	return getMcuDataPtr()->sSettins.btVol;
 }
 int McuProvider::get_settings_gpsvol()
 {
-	return getMcuDataPtr()->sSystem.gpsVol;
+	return getMcuDataPtr()->sSettins.gpsVol;
 }
 int McuProvider::get_settings_defvol()
 {
-	return getMcuDataPtr()->sSystem.defVol;
+	return getMcuDataPtr()->sSettins.defVol;
 }
 
 int McuProvider::get_settings_key_sound()
 {
-	return getMcuDataPtr()->sSystem.bBeep;
+	return getMcuDataPtr()->sSettins.bBeep;
 }
 
 int McuProvider::get_settings_treb()
 {
-	return getMcuDataPtr()->sSystem.treb;
+	return getMcuDataPtr()->sSettins.treb;
 }
 
 int McuProvider::get_settings_mid()
 {
-	return getMcuDataPtr()->sSystem.mid;
+	return getMcuDataPtr()->sSettins.mid;
 }
 int McuProvider::get_settings_bass()
 {
-	return getMcuDataPtr()->sSystem.bass;
+	return getMcuDataPtr()->sSettins.bass;
 }
 
 int McuProvider::get_settings_fade() 
 {
-	return getMcuDataPtr()->sSystem.fade;
+	return getMcuDataPtr()->sSettins.fade;
 }
 int McuProvider::get_settings_bal() 
 {
-	return getMcuDataPtr()->sSystem.bal;
+	return getMcuDataPtr()->sSettins.bal;
 }
 int McuProvider::get_settings_mute()
 {
-	return getMcuDataPtr()->sSystem.bMute;
+	return getMcuDataPtr()->sSettins.bMute;
 }
 int McuProvider::get_settings_audio_mode()
 {
-	return getMcuDataPtr()->sSystem.audioMode;
+	return getMcuDataPtr()->sSettins.audioMode;
 }
 
 void McuProvider::set_settings_brightness(int brightness)
 {
-	getMcuDataPtr()->sSystem.bright = brightness;
+	getMcuDataPtr()->sSettins.bright = brightness;
 }
 void McuProvider::set_settings_navi_max(int max)
 {
-	//getMcuDataPtr()->sSystem.bright
+	//getMcuDataPtr()->sSettins.bright
 }
 
 void McuProvider::set_settings_volume(int volume)
 {
-	getMcuDataPtr()->sSystem.vol = volume;
+	getMcuDataPtr()->sSettins.vol = volume;
 }
 void McuProvider::set_settings_btvol(int vol)
 {
-	getMcuDataPtr()->sSystem.btVol= vol;
+	getMcuDataPtr()->sSettins.btVol= vol;
 }
 void McuProvider::set_settings_gpsvol(int vol)
 {
-	getMcuDataPtr()->sSystem.gpsVol= vol;
+	getMcuDataPtr()->sSettins.gpsVol= vol;
 }
 
 void McuProvider::set_settings_defvol(int vol)
 {
-	getMcuDataPtr()->sSystem.defVol = vol;
+	getMcuDataPtr()->sSettins.defVol = vol;
 }
 
 void McuProvider::set_settings_key_sound(bool enabled)
 {
-	getMcuDataPtr()->sSystem.bBeep = enabled;
+	getMcuDataPtr()->sSettins.bBeep = enabled;
 }
 
 void McuProvider::set_settings_treb(int treb)
 {
-	getMcuDataPtr()->sSystem.treb = treb; 
+	getMcuDataPtr()->sSettins.treb = treb; 
 }
 void McuProvider::set_settings_mid(int mid)
 {
-	getMcuDataPtr()->sSystem.mid = mid;
+	getMcuDataPtr()->sSettins.mid = mid;
 }
 void McuProvider::set_settings_bass(int bass)
 {
-	getMcuDataPtr()->sSystem.bass = bass;
+	getMcuDataPtr()->sSettins.bass = bass;
 }
 
 void McuProvider::set_settings_fade(int fade) 
 {
-	getMcuDataPtr()->sSystem.fade = fade;
+	getMcuDataPtr()->sSettins.fade = fade;
 }
 void McuProvider::set_settings_bal(int bal) 
 {
-	getMcuDataPtr()->sSystem.bal = bal;
+	getMcuDataPtr()->sSettins.bal = bal;
 }
 void McuProvider::set_settings_mute(bool enabled)
 {
-	getMcuDataPtr()->sSystem.bMute = enabled;
+	getMcuDataPtr()->sSettins.bMute = enabled;
 }
 void McuProvider::set_settings_audio_mode(int mode)
 {
-	getMcuDataPtr()->sSystem.audioMode= mode;
+	getMcuDataPtr()->sSettins.audioMode= mode;
 }
+
+
+bool McuProvider::check_system_info_changed(){	
+	if(getLastMcuDataPtr()->sSystem.accon != get_system_acc_state()
+		|| getLastMcuDataPtr()->sSystem.source != get_system_source()
+		|| getLastMcuDataPtr()->sSystem.state != get_system_state()
+	)
+	{
+		getLastMcuDataPtr()->sSystem.accon = get_system_acc_state();
+		getLastMcuDataPtr()->sSystem.source = get_system_source();
+		getLastMcuDataPtr()->sSystem.state = get_system_state();
+		return true;
+	}
+	return false;
+}
+bool McuProvider::get_system_info(Parcel& to)
+{
+	to.setDataPosition(0);
+	to.writeInt32(get_system_acc_state());
+
+	return true;
+}
+void McuProvider::set_system_acc_state(bool accon)
+{
+	getMcuDataPtr()->sSystem.accon = accon;
+}
+bool McuProvider::get_system_acc_state()
+{
+	return getMcuDataPtr()->sSystem.accon;
+}
+
+void McuProvider::set_system_source(int source)
+{
+	getMcuDataPtr()->sSystem.source= source;
+}
+int McuProvider::get_system_source()
+{
+	return getMcuDataPtr()->sSystem.source;
+}
+void McuProvider::set_system_state(int state)
+{
+	getMcuDataPtr()->sSystem.state= state;
+}
+int McuProvider::get_system_state()
+{
+	return getMcuDataPtr()->sSystem.state;
+}
+
 
 
 

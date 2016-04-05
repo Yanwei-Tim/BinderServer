@@ -7,6 +7,7 @@ LOCAL_SRC_FILES:= \
 	UartProxy.cpp \
 	IDataChangedListener.cpp \
 	DataChangedListener.cpp \
+	DeathNotifier.cpp \
 	IMcuService.cpp \
 	McuService.cpp \
 	NotifyDispatcher.cpp \

@@ -22,26 +22,32 @@ public class RegistManager {
 		return mInstance;
 	}
 	
-	private List<IRadioInfoChangedListener> radioInfoChangedListeners = null;
-	private List<IBTInfoChangedListener> btInfoChangedListeners = null;
-	private List<ISettingsInfoChangedListener> SettingsInfoChangedListeners = null;
+	private List<IRadioInfoChangedListener> mRadioInfoChangedListeners = null;
+	private List<IBTInfoChangedListener> mBtInfoChangedListeners = null;
+	private List<ISettingsInfoChangedListener> mSettingsInfoChangedListeners = null;
+	private List<ISystemInfoChangedListener> mSystemInfoChangedListeners = null;
+	private List<IMcuHardKeyChangedListener> mMcuHardKeyInfoChangedListeners = null;
+	private List<ICanInfoChangedListener> mCanInfoChangedListeners = null;
+	
+	
+	//radio
 	protected boolean addRadioInfoChangedListener(IRadioInfoChangedListener listener)
 	{
 		if(listener == null) return false;
-		if(radioInfoChangedListeners == null)
+		if(mRadioInfoChangedListeners == null)
 		{
-			radioInfoChangedListeners = new ArrayList<IRadioInfoChangedListener>();
-			radioInfoChangedListeners.clear();
+			mRadioInfoChangedListeners = new ArrayList<IRadioInfoChangedListener>();
+			mRadioInfoChangedListeners.clear();
 		}
 		
-		if(radioInfoChangedListeners.contains(listener))
+		if(mRadioInfoChangedListeners.contains(listener))
 		{
 			Log.i(TAG, "already regist this radio listener, so skip it");
 		}
 		else
 		{
-			radioInfoChangedListeners.add(listener);
-			if(radioInfoChangedListeners.size() == 1)
+			mRadioInfoChangedListeners.add(listener);
+			if(mRadioInfoChangedListeners.size() == 1)
 			{
 				//add first, then regist
 				registRadioInfoChangedListener();
@@ -52,15 +58,14 @@ public class RegistManager {
 	}
 	protected boolean removeRadioInfoChangedListener(IRadioInfoChangedListener listener)
 	{
-		if(radioInfoChangedListeners != null)
+		if(mRadioInfoChangedListeners != null)
 		{
-			for(int i=0; i<radioInfoChangedListeners.size(); i++)
+			for(int i=0; i<mRadioInfoChangedListeners.size(); i++)
 			{
-				
-				if(radioInfoChangedListeners.get(i) == listener)
+				if(mRadioInfoChangedListeners.get(i) == listener)
 				{
-					radioInfoChangedListeners.remove(i);
-					if(radioInfoChangedListeners.size() == 0)
+					mRadioInfoChangedListeners.remove(i);
+					if(mRadioInfoChangedListeners.size() == 0)
 					{
 						unregistRadioInfoChangedListener();
 					}
@@ -70,24 +75,26 @@ public class RegistManager {
 		}
 		return false;
 	}
+	
+	//bt info
 	protected boolean addBTInfoChangedListener(IBTInfoChangedListener listener)
 	{
 		
 		if(listener == null) return false;
-		if(btInfoChangedListeners == null)
+		if(mBtInfoChangedListeners == null)
 		{
-			btInfoChangedListeners = new ArrayList<IBTInfoChangedListener>();
-			btInfoChangedListeners.clear();
+			mBtInfoChangedListeners = new ArrayList<IBTInfoChangedListener>();
+			mBtInfoChangedListeners.clear();
 		}
 		
-		if(btInfoChangedListeners.contains(listener))
+		if(mBtInfoChangedListeners.contains(listener))
 		{
-			Log.i(TAG, "already regist this radio listener, so skip it");
+			Log.i(TAG, "already regist this bt listener, so skip it");
 		}
 		else
 		{
-			btInfoChangedListeners.add(listener);
-			if(btInfoChangedListeners.size() == 1)
+			mBtInfoChangedListeners.add(listener);
+			if(mBtInfoChangedListeners.size() == 1)
 			{
 				//add first, then regist
 				registBTInfoChangedListener();
@@ -99,17 +106,17 @@ public class RegistManager {
 	protected boolean removeBTInfoChangedListener(IBTInfoChangedListener listener)
 	{
 		
-		if(btInfoChangedListeners != null)
+		if(mBtInfoChangedListeners != null)
 		{
-			for(int i=0; i<btInfoChangedListeners.size(); i++)
+			for(int i=0; i<mBtInfoChangedListeners.size(); i++)
 			{
 				
-				if(btInfoChangedListeners.get(i) == listener)
+				if(mBtInfoChangedListeners.get(i) == listener)
 				{
-					btInfoChangedListeners.remove(i);
-					if(btInfoChangedListeners.size() == 0)
+					mBtInfoChangedListeners.remove(i);
+					if(mBtInfoChangedListeners.size() == 0)
 					{
-						btInfoChangedListeners = null;
+						mBtInfoChangedListeners = null;
 						unregistBTInfoChangedListener();
 					}
 					return true;
@@ -118,23 +125,25 @@ public class RegistManager {
 		}
 		return false;
 	}
+	
+	//settings info
 	protected boolean addSettingsInfoChangedListener(ISettingsInfoChangedListener listener)
 	{
 		if(listener == null) return false;
-		if(SettingsInfoChangedListeners == null)
+		if(mSettingsInfoChangedListeners == null)
 		{
-			SettingsInfoChangedListeners = new ArrayList<ISettingsInfoChangedListener>();
-			SettingsInfoChangedListeners.clear();
+			mSettingsInfoChangedListeners = new ArrayList<ISettingsInfoChangedListener>();
+			mSettingsInfoChangedListeners.clear();
 		}
 		
-		if(SettingsInfoChangedListeners.contains(listener))
+		if(mSettingsInfoChangedListeners.contains(listener))
 		{
-			Log.i(TAG, "already regist this radio listener, so skip it");
+			Log.i(TAG, "already regist this settings listener, so skip it");
 		}
 		else
 		{
-			SettingsInfoChangedListeners.add(listener);
-			if(SettingsInfoChangedListeners.size() == 1)
+			mSettingsInfoChangedListeners.add(listener);
+			if(mSettingsInfoChangedListeners.size() == 1)
 			{
 				//add first, then regist
 				registSettingsInfoChangedListener();
@@ -143,20 +152,19 @@ public class RegistManager {
 		
 		return true;
 	}
-	
 	protected boolean removeSettingsInfoChangedListener(ISettingsInfoChangedListener listener)
 	{
-		if(SettingsInfoChangedListeners != null)
+		if(mSettingsInfoChangedListeners != null)
 		{
-			for(int i=0; i<SettingsInfoChangedListeners.size(); i++)
+			for(int i=0; i<mSettingsInfoChangedListeners.size(); i++)
 			{
 				
-				if(SettingsInfoChangedListeners.get(i) == listener)
+				if(mSettingsInfoChangedListeners.get(i) == listener)
 				{
-					SettingsInfoChangedListeners.remove(i);
-					if(SettingsInfoChangedListeners.size() == 0)
+					mSettingsInfoChangedListeners.remove(i);
+					if(mSettingsInfoChangedListeners.size() == 0)
 					{
-						SettingsInfoChangedListeners = null;
+						mSettingsInfoChangedListeners = null;
 						unregistSettingsInfoChangedListener();
 					}
 					return true;
@@ -165,6 +173,147 @@ public class RegistManager {
 		}
 		return false;
 	}
+	
+	//system info
+	protected boolean addSystemInfoChangedListener(ISystemInfoChangedListener listener)
+	{
+		if(listener == null) return false;
+		if(mSystemInfoChangedListeners == null)
+		{
+			mSystemInfoChangedListeners = new ArrayList<ISystemInfoChangedListener>();
+			mSystemInfoChangedListeners.clear();
+		}
+		
+		if(mSystemInfoChangedListeners.contains(listener))
+		{
+			Log.i(TAG, "already regist this system listener, so skip it");
+		}
+		else
+		{
+			mSystemInfoChangedListeners.add(listener);
+			if(mSystemInfoChangedListeners.size() == 1)
+			{
+				//add first, then regist
+				registSystemInfoChangedListener();
+			}
+		}
+		
+		return true;
+	}
+	protected boolean removeSystemInfoChangedListener(ISystemInfoChangedListener listener)
+	{
+		if(mSystemInfoChangedListeners != null)
+		{
+			for(int i=0; i<mSystemInfoChangedListeners.size(); i++)
+			{
+				
+				if(mSystemInfoChangedListeners.get(i) == listener)
+				{
+					mSystemInfoChangedListeners.remove(i);
+					if(mSystemInfoChangedListeners.size() == 0)
+					{
+						mSystemInfoChangedListeners = null;
+						unregistSystemInfoChangedListener();
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//mcu hard key info
+	protected boolean addMcuHardKeyInfoChangedListener(IMcuHardKeyChangedListener listener)
+	{
+		if(listener == null) return false;
+		if(mMcuHardKeyInfoChangedListeners == null)
+		{
+			mMcuHardKeyInfoChangedListeners = new ArrayList<IMcuHardKeyChangedListener>();
+			mMcuHardKeyInfoChangedListeners.clear();
+		}
+		
+		if(mMcuHardKeyInfoChangedListeners.contains(listener))
+		{
+			Log.i(TAG, "already regist this radio listener, so skip it");
+		}
+		else
+		{
+			mMcuHardKeyInfoChangedListeners.add(listener);
+			if(mMcuHardKeyInfoChangedListeners.size() == 1)
+			{
+				//add first, then regist
+				registMcuHardKeyChangedListener();
+			}
+		}
+		return true;
+	}
+	protected boolean removeMcuHardKeyInfoChangedListener(IMcuHardKeyChangedListener listener)
+	{
+		if(mMcuHardKeyInfoChangedListeners != null)
+		{
+			for(int i=0; i<mMcuHardKeyInfoChangedListeners.size(); i++)
+			{
+				if(mMcuHardKeyInfoChangedListeners.get(i) == listener)
+				{
+					mMcuHardKeyInfoChangedListeners.remove(i);
+					if(mMcuHardKeyInfoChangedListeners.size() == 0)
+					{
+						unregistMcuHardKeyChangedListener();
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	// can info 
+	protected boolean addCanInfoChangedListener(ICanInfoChangedListener listener)
+	{
+		if(listener == null) return false;
+		if(mCanInfoChangedListeners == null)
+		{
+			mCanInfoChangedListeners = new ArrayList<ICanInfoChangedListener>();
+			mCanInfoChangedListeners.clear();
+		}
+		
+		if(mCanInfoChangedListeners.contains(listener))
+		{
+			Log.i(TAG, "already regist can info listener, so skip it");
+		}
+		else
+		{
+			mCanInfoChangedListeners.add(listener);
+			if(mCanInfoChangedListeners.size() == 1)
+			{
+				//add first, then regist
+				registCanInfoChangedListener();
+			}
+		}
+		return true;
+	}
+	protected boolean removeCanInfoChangedListener(ICanInfoChangedListener listener)
+	{
+		if(mCanInfoChangedListeners != null)
+		{
+			for(int i=0; i<mCanInfoChangedListeners.size(); i++)
+			{
+				if(mCanInfoChangedListeners.get(i) == listener)
+				{
+					mCanInfoChangedListeners.remove(i);
+					if(mCanInfoChangedListeners.size() == 0)
+					{
+						unregistCanInfoChangedListener();
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	
 	DataChangedListener radioDataChangedListener = null;
 	//only regist once from mcuserver
 	private void registRadioInfoChangedListener()
@@ -221,6 +370,63 @@ public class RegistManager {
 		}
 	}
 	
+	DataChangedListener systemDataChangedListener = null;
+	//only regist once from mcuserver
+	private void registSystemInfoChangedListener()
+	{
+		if(systemDataChangedListener == null)
+		{
+			systemDataChangedListener = new DataChangedListener();
+		}
+		McuManagerService.getInstance().registDataChangedListener(SystemInfo.SYSTEM_DOMAIN, systemDataChangedListener);
+	}
+	private void unregistSystemInfoChangedListener()
+	{
+		if(systemDataChangedListener != null)
+		{
+			McuManagerService.getInstance().unregistDataChangedListener(SystemInfo.SYSTEM_DOMAIN, systemDataChangedListener);
+		}
+	}
+	
+	DataChangedListener mcuHardKeyChangedListener = null;
+	//only regist once from mcuserver
+	private void registMcuHardKeyChangedListener()
+	{
+		if(mcuHardKeyChangedListener == null)
+		{
+			mcuHardKeyChangedListener = new DataChangedListener();
+		}
+		McuManagerService.getInstance().registDataChangedListener(McuHardKeyInfo.HARDKEY_DOMAIN, mcuHardKeyChangedListener);
+	}
+	
+	private void unregistMcuHardKeyChangedListener()
+	{
+		if(mcuHardKeyChangedListener != null)
+		{
+			McuManagerService.getInstance().unregistDataChangedListener(McuHardKeyInfo.HARDKEY_DOMAIN, mcuHardKeyChangedListener);
+		}
+	}
+	
+	DataChangedListener canInfoChangedListener = null;
+	//only regist once from mcuserver
+	private void registCanInfoChangedListener()
+	{
+		if(canInfoChangedListener == null)
+		{
+			canInfoChangedListener = new DataChangedListener();
+		}
+		McuManagerService.getInstance().registDataChangedListener(CanInfo.CANINFO_DOMAIN, canInfoChangedListener);
+	}
+	
+	private void unregistCanInfoChangedListener()
+	{
+		if(canInfoChangedListener != null)
+		{
+			McuManagerService.getInstance().unregistDataChangedListener(CanInfo.CANINFO_DOMAIN, canInfoChangedListener);
+		}
+	}
+	
+	
 	
 	private void doNotify(int msg, int ext0, int ext1, Parcel parcel)
 	{
@@ -229,9 +435,9 @@ public class RegistManager {
 			RadioInfo radio = RadioInfo.CREATOR.createFromParcel(parcel);
 			if(radio != null)
 			{
-				for(int i=0; radioInfoChangedListeners != null && i< radioInfoChangedListeners.size(); i++)
+				for(int i=0; mRadioInfoChangedListeners != null && i< mRadioInfoChangedListeners.size(); i++)
 				{
-					radioInfoChangedListeners.get(i).notify(null, radio);
+					mRadioInfoChangedListeners.get(i).notify(null, radio);
 				}
 			}
 		}
@@ -240,9 +446,9 @@ public class RegistManager {
 			BTInfo bt = BTInfo.CREATOR.createFromParcel(parcel);
 			if(bt != null)
 			{
-				for(int i=0; btInfoChangedListeners != null && i<btInfoChangedListeners.size(); i++)
+				for(int i=0; mBtInfoChangedListeners != null && i<mBtInfoChangedListeners.size(); i++)
 				{
-					btInfoChangedListeners.get(i).notify(null, bt);
+					mBtInfoChangedListeners.get(i).notify(null, bt);
 				}
 			}
 		}
@@ -251,14 +457,34 @@ public class RegistManager {
 			SettingsInfo settings = SettingsInfo.CREATOR.createFromParcel(parcel);
 			if(settings != null)
 			{
-				for(int i=0; SettingsInfoChangedListeners != null && i<SettingsInfoChangedListeners.size(); i++)
+				for(int i=0; mSettingsInfoChangedListeners != null && i<mSettingsInfoChangedListeners.size(); i++)
 				{
-					SettingsInfoChangedListeners.get(i).notify(null, settings);
+					mSettingsInfoChangedListeners.get(i).notify(null, settings);
 				}
+			}
+		}
+		else if(msg == McuHardKeyInfo.HARDKEY_DOMAIN)
+		{
+			McuHardKeyInfo info = McuHardKeyInfo.CREATOR.createFromParcel(parcel);
+			if(info != null)
+			{
+				for(int i=0; mMcuHardKeyInfoChangedListeners != null && i<mMcuHardKeyInfoChangedListeners.size(); i++)
+				{
+					mMcuHardKeyInfoChangedListeners.get(i).notify(null, info);
+				}
+			}
+		}
+		else if(msg == CanInfo.CANINFO_DOMAIN)
+		{
+			short[] result = CanInfo.toShortArray(parcel);
+			for(int i=0; mCanInfoChangedListeners != null && i<mCanInfoChangedListeners.size(); i++)
+			{
+				mCanInfoChangedListeners.get(i).notify(null, result);
 			}
 		}
 	}
 	
+	//binder server callback this interface
 	class DataChangedListener extends IDataChangedListener.Stub
 	{
 		@Override
@@ -278,5 +504,15 @@ public class RegistManager {
 	public interface ISettingsInfoChangedListener {
 		void notify(int[] changeCMDs, SettingsInfo settings);
 	}
+	public interface ISystemInfoChangedListener {
+		void notify(int[] changeCMDs, SystemInfo settings);
+	}
+	public interface IMcuHardKeyChangedListener {
+		void notify(int[] changeCMDs, McuHardKeyInfo hardkey);
+	}
+	public interface ICanInfoChangedListener {
+		void notify(int[] changeCMDs, short[] caninfo);
+	}
 	
 }
+

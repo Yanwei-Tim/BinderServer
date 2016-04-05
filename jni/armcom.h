@@ -4,7 +4,7 @@
 // 此协议不允许轻易修改
 /************MCU==>ARM START**************/
 //ZH_011 add start
-#define ARM_CMD_CHECK_VER			0x05		//在第@次上电的时候发送版本号给ARM,达到和ARM同步
+#define ARM_CMD_CHECK_VER			0x05		//在第D次上电的时候发送版本号给ARM,达到和ARM同步
 //ZH_011 add end
 
 
@@ -185,7 +185,7 @@
 #define ARM_DATA_LIMITER             		0x1B
 #define ARM_DATA_TRUBASS_FREQ       		0x1C
 #define ARM_DATA_BTVOL						0x1D		//蓝牙音量
-#define ARM_DATA_TIME_AREA					0x1E
+//#define ARM_DATA_TIME_AREA					0x1E
 #define ARM_DATA_FREQ30						0x20
 #define ARM_DATA_FREQ60						0x21
 #define ARM_DATA_FREQ125					0x22

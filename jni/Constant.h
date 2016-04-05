@@ -90,6 +90,22 @@ enum {
     
 };
 
+enum {
+	DOMAIN_SYSTEM = 300,
+    CMD_SYSTEM_ACCON,
+    CMD_SYSTEM_SOURCE,
+    CMD_SYSTEM_STATE,
+};
+
+enum {
+	DOMAIN_MCUKEY = 400,
+};
+enum {
+	DOMAIN_CANINFO = 500,
+};
+
+
+
 
 #endif
 

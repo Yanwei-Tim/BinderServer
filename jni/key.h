@@ -419,7 +419,7 @@
 #define C_ARMKEY_SETUP_ID_CALENDAR	    0x160D   //万年历
 
 #define C_ARMKEY_SETUP_ID_LANG         0x160E  //语言设置
-#define C_ARMKEY_SETUP_ID_LANG_FPAGE   0x160F  //语言设置，第@页
+#define C_ARMKEY_SETUP_ID_LANG_FPAGE   0x160F  //语言设置，第D页
 #define C_ARMKEY_SETUP_ID_LANG_SPAGE   0x1610  //语言设置，第二页
 #define C_ARMKEY_SETUP_ID_LANG_TPAGE   0x1611  //语言设置，第三页
 #define C_ARMKEY_SETUP_ID_3G		   0x1612  //语言设置，第三页
@@ -580,10 +580,10 @@
 #define C_SETBASIC_DEFVOL_INC			0x1828 //默认音量开
 #define C_SETBASIC_DEFVOL_DEC			0x1829 //默认音量减
 
-#define C_SETBASIC_FPAGE				0x1830//第@页
+#define C_SETBASIC_FPAGE				0x1830//第D页
 #define C_SETBASIC_SPAGE				0x1831//第二页
 #define C_SETBASIC_BT					0x1832//BT
-#define C_SETBASIC_NPAGE				0x1833//下@菜单
+#define C_SETBASIC_NPAGE				0x1833//下D菜单
 
 #define C_SETAUDIO_SOULDFILED		    0x1834//声场设置
 #define C_SETAUDIO_SRS			    	0x1835//SRS

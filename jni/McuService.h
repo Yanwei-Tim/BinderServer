@@ -25,11 +25,16 @@
 #include <utils/List.h>
 
 #include "IMcuService.h"
-#include "McuWriter.h"
-#include "McuReader.h"
+//#include "McuWriter.h"
+//#include "McuReader.h"
 
+#include "DeathNotifier.h"
+#include "IncludeAll.h"
 
 //typedef List<sp<IDataChangedListener> > LISTENERLIST;
+
+class McuReader;
+class McuWriter;
 
 namespace android {
 
@@ -43,19 +48,34 @@ public:
     virtual int getTest();
 	virtual bool obtainInfo(int domain, int cmd, Parcel& out);
 	virtual bool sendInfo(int domain, int cmd, Parcel& in);
+	
 	virtual bool registDataChanagedListener(int domain, const sp<IDataChangedListener>& dataChangedListener);
 	virtual bool unregistDataChanagedListener(int domain, const sp<IDataChangedListener>& dataChangedListener);
+	virtual bool unregistBinder(int domain, const sp<IBinder>& binder);
 	virtual bool notifyDataChanagedListener(int domain, Parcel& data);
+	virtual bool notifyHardKey(int key);
+	virtual bool notifyCanInfo(const u_c* buff, int len);
+	
 	virtual void setMcuWriter(sp<McuWriter>& writer);
 	virtual void setMcuReader(sp<McuReader>& reader);
-	 
+	
+	virtual void onClientBinderDied(int domain, const wp<IBinder>& who);
+	virtual void registClientBinderDied(int domain, const sp<IDataChangedListener>& dataChangedListener);
+
 private:
 	int mTest;
 	sp<McuWriter> m_pMcuWriter;
 	sp<McuReader> m_pMcuReader;
+	
 	List<sp<IDataChangedListener> > mRadioLists;
 	List<sp<IDataChangedListener> > mBTLists;
 	List<sp<IDataChangedListener> > mSettingsLists;
+	List<sp<IDataChangedListener> > mSystemLists;
+	List<sp<IDataChangedListener> > mMcuKeyLists;
+	List<sp<IDataChangedListener> > mCanInfoLists;
+	
+	List<sp<DeathNotifier> > mDeathNotifiers;
+	
 };
 
 // ----------------------------------------------------------------------------

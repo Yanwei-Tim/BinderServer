@@ -34,3 +34,4 @@ CMCUUart* UartProxy::getUart()
 	return m_pUart;
 }
 
+

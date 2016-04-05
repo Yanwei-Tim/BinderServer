@@ -5,10 +5,12 @@
 #include <utils/Log.h>
 
 #include "IncludeAll.h"
+#include "McuService.h"
 
 
 #include "McuReader.h"
 
+//using namespace android;
 
 #define PARSE_DEBUG 0
 #define MCU_READ_MAX 64
@@ -16,9 +18,18 @@
 McuReader::McuReader(CMCUUart* mcu_uart)
 	:UartProxy(mcu_uart)
 {
+	
 }
+
+McuReader::McuReader(CMCUUart* mcu_uart, McuService* ms)
+	:UartProxy(mcu_uart),mMcuService(ms)
+{
+	
+}
+
 McuReader::~McuReader()
 {
+	ALOGI("mcu reader destory...");
 }
 
 void McuReader::start_read_mcu_data_loop()
@@ -183,32 +194,32 @@ void McuReader::parse_sysinfo(const BYTE *pBuff,int num)
 	switch(pBuff[4])
 	{
 	case ARM_DATA_YEAR :
-		getMcuDataPtr()->sSystem.year = pBuff[5];
-		ALOGI("year = %d", getMcuDataPtr()->sSystem.year); 		
+		getMcuDataPtr()->sSettins.year = pBuff[5];
+		ALOGI("year = %d", getMcuDataPtr()->sSettins.year); 		
 		break;
 	case ARM_DATA_MONTH :
-		getMcuDataPtr()->sSystem.month = pBuff[5];
-		ALOGI("month = %d", getMcuDataPtr()->sSystem.month); 		
+		getMcuDataPtr()->sSettins.month = pBuff[5];
+		ALOGI("month = %d", getMcuDataPtr()->sSettins.month); 		
 		break;
 	case ARM_DATA_DAY :
-		getMcuDataPtr()->sSystem.day = pBuff[5];
-		ALOGI("day = %d", getMcuDataPtr()->sSystem.day); 		
+		getMcuDataPtr()->sSettins.day = pBuff[5];
+		ALOGI("day = %d", getMcuDataPtr()->sSettins.day); 		
 		break;
 	case ARM_DATA_HOUR :
-		getMcuDataPtr()->sSystem.hour = pBuff[5];
-		ALOGI("hour = %d", getMcuDataPtr()->sSystem.hour);		
+		getMcuDataPtr()->sSettins.hour = pBuff[5];
+		ALOGI("hour = %d", getMcuDataPtr()->sSettins.hour);		
 		break;
 	case ARM_DATA_MINUTE :
-		getMcuDataPtr()->sSystem.minute = pBuff[5];
-		ALOGI("minute = %d", getMcuDataPtr()->sSystem.minute);			
+		getMcuDataPtr()->sSettins.minute = pBuff[5];
+		ALOGI("minute = %d", getMcuDataPtr()->sSettins.minute);			
 		break;
 	case ARM_DATA_SECOND :
-		getMcuDataPtr()->sSystem.second = pBuff[5];
-		ALOGI("second = %d", getMcuDataPtr()->sSystem.second); 		
+		getMcuDataPtr()->sSettins.second = pBuff[5];
+		ALOGI("second = %d", getMcuDataPtr()->sSettins.second); 		
 		break;
 	case ARM_DATA_TIME12H :
-		getMcuDataPtr()->sSystem.b12H = pBuff[5];		
-		ALOGI("b12H = %d", getMcuDataPtr()->sSystem.b12H); 
+		getMcuDataPtr()->sSettins.b12H = pBuff[5];		
+		ALOGI("b12H = %d", getMcuDataPtr()->sSettins.b12H); 
 		break;
 	case ARM_DATA_VOL: {
 		int vol = pBuff[5];
@@ -256,22 +267,22 @@ void McuReader::parse_sysinfo(const BYTE *pBuff,int num)
 		ALOGI("bright = %d", bright);
 	} break;
 	case ARM_DATA_CONTRAST:
-		getMcuDataPtr()->sSystem.contrast = pBuff[5];
-		ALOGI("contrast = %d", getMcuDataPtr()->sSystem.contrast);			
+		getMcuDataPtr()->sSettins.contrast = pBuff[5];
+		ALOGI("contrast = %d", getMcuDataPtr()->sSettins.contrast);			
 		break;
 	case ARM_DATA_COLOR :
-		getMcuDataPtr()->sSystem.color = pBuff[5];
-		ALOGI("color = %d", getMcuDataPtr()->sSystem.color);			
+		getMcuDataPtr()->sSettins.color = pBuff[5];
+		ALOGI("color = %d", getMcuDataPtr()->sSettins.color);			
 		break;
 	case ARM_DATA_VIDEOMODE :
-		getMcuDataPtr()->sSystem.videoMode = pBuff[5];
-		ALOGI("videoMode = %d", getMcuDataPtr()->sSystem.videoMode); 
+		getMcuDataPtr()->sSettins.videoMode = pBuff[5];
+		ALOGI("videoMode = %d", getMcuDataPtr()->sSettins.videoMode); 
 		break;
 	case ARM_DATA_TUNERSYS :
-		getMcuDataPtr()->sSystem.tunerSys = pBuff[5];	
+		getMcuDataPtr()->sSettins.tunerSys = pBuff[5];	
 		break;
 	case ARM_DATA_TVSYS :
-		getMcuDataPtr()->sSystem.tvSys = pBuff[5];			
+		getMcuDataPtr()->sSettins.tvSys = pBuff[5];			
 		break;
 	case ARM_DATA_BEEP: {
 		bool beep = (bool)pBuff[5];
@@ -279,8 +290,8 @@ void McuReader::parse_sysinfo(const BYTE *pBuff,int num)
 		ALOGI("beep = %d", beep);
 	} break;
 	case ARM_DATA_SYSFLAG :
-		getMcuDataPtr()->sSystem.sysFlag = pBuff[5];
-		ALOGI("sysFlag = [%d]", getMcuDataPtr()->sSystem.sysFlag); 			
+		getMcuDataPtr()->sSettins.sysFlag = pBuff[5];
+		ALOGI("sysFlag = [%d]", getMcuDataPtr()->sSettins.sysFlag); 			
 		break;
 	case ARM_DATA_BTVOL: {
 		int vol = pBuff[5];
@@ -288,56 +299,56 @@ void McuReader::parse_sysinfo(const BYTE *pBuff,int num)
 		ALOGI("btvol = %d", vol);
 	} break;
 	case ARM_DATA_FREQ30 :
-		getMcuDataPtr()->sSystem.freq30 = pBuff[5];
-		ALOGI("freq30 = %d", getMcuDataPtr()->sSystem.freq30); 			
+		getMcuDataPtr()->sSettins.freq30 = pBuff[5];
+		ALOGI("freq30 = %d", getMcuDataPtr()->sSettins.freq30); 			
 		break;
 	case ARM_DATA_FREQ60 :
-		getMcuDataPtr()->sSystem.freq60 = pBuff[5];
-		ALOGI("freq60 = %d", getMcuDataPtr()->sSystem.freq60); 			
+		getMcuDataPtr()->sSettins.freq60 = pBuff[5];
+		ALOGI("freq60 = %d", getMcuDataPtr()->sSettins.freq60); 			
 		break;
 	case ARM_DATA_FREQ125 :
-		getMcuDataPtr()->sSystem.freq125 = pBuff[5];
-		ALOGI("freq125 = %d", getMcuDataPtr()->sSystem.freq125); 			
+		getMcuDataPtr()->sSettins.freq125 = pBuff[5];
+		ALOGI("freq125 = %d", getMcuDataPtr()->sSettins.freq125); 			
 		break;
 	case ARM_DATA_FREQ250 :
-		getMcuDataPtr()->sSystem.freq250 = pBuff[5];
-		ALOGI("freq250 = %d", getMcuDataPtr()->sSystem.freq250); 			
+		getMcuDataPtr()->sSettins.freq250 = pBuff[5];
+		ALOGI("freq250 = %d", getMcuDataPtr()->sSettins.freq250); 			
 		break;
 	case ARM_DATA_FREQ500 :
-		getMcuDataPtr()->sSystem.freq500 = pBuff[5];
-		ALOGI("freq500 = %d", getMcuDataPtr()->sSystem.freq500);
+		getMcuDataPtr()->sSettins.freq500 = pBuff[5];
+		ALOGI("freq500 = %d", getMcuDataPtr()->sSettins.freq500);
 		break;
 	case ARM_DATA_FREQ1K :
-		getMcuDataPtr()->sSystem.freq1K = pBuff[5];
-		ALOGI("freq1K = %d", getMcuDataPtr()->sSystem.freq1K); 			
+		getMcuDataPtr()->sSettins.freq1K = pBuff[5];
+		ALOGI("freq1K = %d", getMcuDataPtr()->sSettins.freq1K); 			
 		break;
 	case ARM_DATA_FREQ2K :
-		getMcuDataPtr()->sSystem.freq2K = pBuff[5];
-		ALOGI("freq2K = %d", getMcuDataPtr()->sSystem.freq2K); 		
+		getMcuDataPtr()->sSettins.freq2K = pBuff[5];
+		ALOGI("freq2K = %d", getMcuDataPtr()->sSettins.freq2K); 		
 		break;
 	case ARM_DATA_FREQ4K  :
-		getMcuDataPtr()->sSystem.freq4K = pBuff[5];
-		ALOGI("freq4K = %d", getMcuDataPtr()->sSystem.freq4K); 			
+		getMcuDataPtr()->sSettins.freq4K = pBuff[5];
+		ALOGI("freq4K = %d", getMcuDataPtr()->sSettins.freq4K); 			
 		break;
 	case ARM_DATA_FREQ8K :
-		getMcuDataPtr()->sSystem.freq8K = pBuff[5];
-		ALOGI("freq8K = %d", getMcuDataPtr()->sSystem.freq8K); 		
+		getMcuDataPtr()->sSettins.freq8K = pBuff[5];
+		ALOGI("freq8K = %d", getMcuDataPtr()->sSettins.freq8K); 		
 		break;
 	case ARM_DATA_FREQ16K :
-		getMcuDataPtr()->sSystem.freq16K = pBuff[5];
-		ALOGI("freq16K = %d", getMcuDataPtr()->sSystem.freq16K); 		
+		getMcuDataPtr()->sSettins.freq16K = pBuff[5];
+		ALOGI("freq16K = %d", getMcuDataPtr()->sSettins.freq16K); 		
 		break;
 	case ARM_DATA_DSP1 :
-		getMcuDataPtr()->sSystem.bDsp1 = pBuff[5];
-		ALOGI("bDsp1 = %d", getMcuDataPtr()->sSystem.bDsp1); 			
+		getMcuDataPtr()->sSettins.bDsp1 = pBuff[5];
+		ALOGI("bDsp1 = %d", getMcuDataPtr()->sSettins.bDsp1); 			
 		break;
 	case ARM_DATA_DSP2 :
-		getMcuDataPtr()->sSystem.bDsp2 = pBuff[5];
-		ALOGI("bDsp2 = %d", getMcuDataPtr()->sSystem.bDsp2); 			
+		getMcuDataPtr()->sSettins.bDsp2 = pBuff[5];
+		ALOGI("bDsp2 = %d", getMcuDataPtr()->sSettins.bDsp2); 			
 		break;
 	case ARM_DATA_DSP3 :
-		getMcuDataPtr()->sSystem.bDsp3 = pBuff[5];
-		ALOGI("bDsp3 = %d", getMcuDataPtr()->sSystem.bDsp3);		
+		getMcuDataPtr()->sSettins.bDsp3 = pBuff[5];
+		ALOGI("bDsp3 = %d", getMcuDataPtr()->sSettins.bDsp3);		
 		break;
 	case ARM_DATA_GPSVOL: {
 		int vol = pBuff[5];
@@ -345,8 +356,8 @@ void McuReader::parse_sysinfo(const BYTE *pBuff,int num)
 		ALOGI("gpsvol = %d", vol);
 	} break;
 	case ARM_DATA_SYSFLAG2 :
-		getMcuDataPtr()->sSystem.sysFlag2 = pBuff[5];
-		ALOGI("sysFlag2 = %d", getMcuDataPtr()->sSystem.sysFlag2); 			
+		getMcuDataPtr()->sSettins.sysFlag2 = pBuff[5];
+		ALOGI("sysFlag2 = %d", getMcuDataPtr()->sSettins.sysFlag2); 			
 		break;
 	case ARM_DATA_DEFVOL: {
 		int defvol = pBuff[5];
@@ -354,58 +365,58 @@ void McuReader::parse_sysinfo(const BYTE *pBuff,int num)
 		ALOGI("defvol = %d", defvol);
 	} break;
 	case ARM_DATA_ARMSAVE1 :
-		getMcuDataPtr()->sSystem.save1 = pBuff[5];
-		ALOGI("save1 = %d", getMcuDataPtr()->sSystem.save1); 
+		getMcuDataPtr()->sSettins.save1 = pBuff[5];
+		ALOGI("save1 = %d", getMcuDataPtr()->sSettins.save1); 
 		break;
 	case ARM_DATA_ARMSAVE2 :
-		getMcuDataPtr()->sSystem.save2 = pBuff[5];
+		getMcuDataPtr()->sSettins.save2 = pBuff[5];
 		break;
 	case ARM_DATA_ARMSAVE3 :
-		getMcuDataPtr()->sSystem.save3 = pBuff[5];
+		getMcuDataPtr()->sSettins.save3 = pBuff[5];
 		break;
 	case ARM_DATA_TV_SIGNAL:
 		getMcuDataPtr()->sTVInfo.tvSigCheck=1;
 		ALOGI("ARM_DATA_TVSINGCHECK  tvSigCheck = %d",getMcuDataPtr()->sTVInfo.tvSigCheck);
 		break;		
 	case ARM_DATA_SUBWOOF:
-		getMcuDataPtr()->sSystem.subwoof = pBuff[5];
-		ALOGI("subwoof = %d", getMcuDataPtr()->sSystem.subwoof);		
+		getMcuDataPtr()->sSettins.subwoof = pBuff[5];
+		ALOGI("subwoof = %d", getMcuDataPtr()->sSettins.subwoof);		
 		break;
 	case ARM_DATA_SRS_SW:
-		getMcuDataPtr()->sSystem.bSrsOn = pBuff[5];
-		ALOGI("bSrsOn = %d", getMcuDataPtr()->sSystem.bSrsOn);
+		getMcuDataPtr()->sSettins.bSrsOn = pBuff[5];
+		ALOGI("bSrsOn = %d", getMcuDataPtr()->sSettins.bSrsOn);
 		break;
 	case ARM_DATA_LOW_FO :
-		getMcuDataPtr()->sSystem.lowFo = pBuff[5];
-		ALOGI("lowFo = %d", getMcuDataPtr()->sSystem.lowFo);		
+		getMcuDataPtr()->sSettins.lowFo = pBuff[5];
+		ALOGI("lowFo = %d", getMcuDataPtr()->sSettins.lowFo);		
 		break;
 	case ARM_DATA_MID_FO :
-		getMcuDataPtr()->sSystem.midFo = pBuff[5];
-		ALOGI("midFo = %d", getMcuDataPtr()->sSystem.midFo);		
+		getMcuDataPtr()->sSettins.midFo = pBuff[5];
+		ALOGI("midFo = %d", getMcuDataPtr()->sSettins.midFo);		
 		break;
 	case ARM_DATA_HIGH_FO :
-		getMcuDataPtr()->sSystem.highFo = pBuff[5];
-		ALOGI("highFo = %d", getMcuDataPtr()->sSystem.highFo); 			
+		getMcuDataPtr()->sSettins.highFo = pBuff[5];
+		ALOGI("highFo = %d", getMcuDataPtr()->sSettins.highFo); 			
 		break;
 	case ARM_DATA_ADJ_BACKVOL:
-		getMcuDataPtr()->sSystem.parkvol = pBuff[5];
-		ALOGI("parkvol = %d", getMcuDataPtr()->sSystem.parkvol); 
+		getMcuDataPtr()->sSettins.parkvol = pBuff[5];
+		ALOGI("parkvol = %d", getMcuDataPtr()->sSettins.parkvol); 
 		break;
 	case ARM_DATA_CAMARAMIX:
-		getMcuDataPtr()->sSystem.parkccd = pBuff[5];
-		ALOGI("parkccd = %d", getMcuDataPtr()->sSystem.parkccd); 
+		getMcuDataPtr()->sSettins.parkccd = pBuff[5];
+		ALOGI("parkccd = %d", getMcuDataPtr()->sSettins.parkccd); 
 		break;
 	case ARM_DATA_USER_BASS:
-		getMcuDataPtr()->sSystem.userBass = pBuff[5];
-		ALOGI("userBass = %d", getMcuDataPtr()->sSystem.userBass); 
+		getMcuDataPtr()->sSettins.userBass = pBuff[5];
+		ALOGI("userBass = %d", getMcuDataPtr()->sSettins.userBass); 
 		break;
 	case ARM_DATA_USER_MID:
-		getMcuDataPtr()->sSystem.userMid = pBuff[5];
-		ALOGI("userMid = %d", getMcuDataPtr()->sSystem.userMid); 
+		getMcuDataPtr()->sSettins.userMid = pBuff[5];
+		ALOGI("userMid = %d", getMcuDataPtr()->sSettins.userMid); 
 		break;
 	case ARM_DATA_USER_TREB:
-		getMcuDataPtr()->sSystem.userTreb = pBuff[5];
-		ALOGI("userTreb = %d", getMcuDataPtr()->sSystem.userTreb); 
+		getMcuDataPtr()->sSettins.userTreb = pBuff[5];
+		ALOGI("userTreb = %d", getMcuDataPtr()->sSettins.userTreb); 
 		break;
 	default :
 		ALOGI("the frame do not used"); 
@@ -475,7 +486,7 @@ void McuReader::parse_setupinfo(const BYTE *pBuff,int num)
 		//PostMessage(g_hWnd,MSG_SYSTEM_REBOOT_MODE,pBuff[5],0);
 		break;
 	case ARM_DATA_DARAR_SW:
-		getMcuDataPtr()->sSystem.radarSwitch = pBuff[5];
+		getMcuDataPtr()->sSettins.radarSwitch = pBuff[5];
 		ALOGI("radar switch = %d", pBuff[5]);
 		break;
 	default:
@@ -524,42 +535,47 @@ void McuReader::parse_single_cmd(const u_c* pBuff, int num)
 		case ARM_CMD_SYS_DEVCHANGE :
 			getMcuDataPtr()->sDeveice.lastDeveiceChange = pBuff[4];
 			break;
-		case ARM_CMD_SYS_KEY :
-			if(pBuff[4] == C_KEY_VOL_INC)
+		case ARM_CMD_SYS_KEY : {
+			int keycode = pBuff[4];
+			if(keycode == C_KEY_VOL_INC      //vol+   
+				|| keycode == C_KEY_VOL_DEC  //vol-
+				|| keycode == C_KEY_MUTE     //mute
+				|| keycode == C_KEY_FREQ_INC //freq+
+				|| keycode == C_KEY_FREQ_DEC //freq-
+				|| keycode == C_KEY_PLAY     //play or pause
+				|| keycode == C_KEY_SEL      //setup
+				|| keycode == C_KEY_ESC      //menu
+				|| keycode == 0xCA      	 //long click menu 
+				|| keycode == C_KEY_MODE     //mode or media
+				|| keycode == C_KEY_RADIO    //radio
+				|| keycode == C_KEY_BAND     //band
+				|| keycode == C_KEY_GPS      //gps
+				|| keycode == C_KEY_DIAL     //bt  or dial
+				|| keycode == 0xCB           //prev
+				|| keycode == 0xCC           //next
+				|| keycode == C_KEY_REW      //long click prev, pew
+				|| keycode == C_KEY_FF       //long click next, ff
+				|| keycode == 0x2A       	 //long click up
+				
+				)
 			{
-				getMcuDataPtr()->sSystem.bMute = false;
-				getMcuDataPtr()->sSystem.vol++;
-				getMcuDataPtr()->sSystem.btVol++;			
-				ALOGI("C_KEY_VOL_INC :: bMute = %d, vol = %d", getMcuDataPtr()->sSystem.bMute, getMcuDataPtr()->sSystem.vol);
-			}
-			else if(pBuff[4] == C_KEY_VOL_DEC)
-			{	
-				ALOGI("C_KEY_VOL_DEC :: bMute = %d, vol = %d", getMcuDataPtr()->sSystem.bMute, getMcuDataPtr()->sSystem.vol);
+				ALOGI("keycode[%d]", keycode);
+				if(mMcuService != NULL)
+				{
+					mMcuService->notifyHardKey(keycode);
+				}
 			}
 			else
 			{
-				if(pBuff[4] == C_KEY_FREQ_DEC || pBuff[4] == C_KEY_NEXT)
-				{
-					//PostMessage(g_hWnd,UART_MCU_ANDROID_KEY_UP,0,0);
-				}
-				else if(pBuff[4] == C_KEY_FREQ_INC || pBuff[4] == C_KEY_PRE)
-				{
-					//PostMessage(g_hWnd,UART_MCU_ANDROID_KEY_DOWN,0,0);
-				}
-				else if(pBuff[4] == C_KEY_ENTER || pBuff[4] == C_KEY_PLAY)
-				{
-					//PostMessage(g_hWnd,UART_MCU_ANDROID_KEY_ENTER,0,0);
-				}
-				getMcuDataPtr()->sCtrl.bHaveKey = true;
-				getMcuDataPtr()->sDeveice.key = pBuff[4];
+				ALOGI("else keycode[%d]", keycode);
 			}
-			break;
-		case ARM_CMD_SYS_REQ_EXIT :
-			//PostMessage(g_hWnd,UART_MCU_DATA_ACC_ONOFF,0,0);
-			break;
-		case ARM_CMD_SYS_REQ_ON :
-			//PostMessage(g_hWnd,UART_MCU_DATA_ACC_ONOFF,1,0);
-			break;
+		} break;
+		case ARM_CMD_SYS_REQ_EXIT: {
+			set_system_acc_state(false);
+		} break;
+		case ARM_CMD_SYS_REQ_ON: {
+			set_system_acc_state(true);
+		} break;
 		case ARM_CMD_SYS_INIT_OK : 
 			//PostMessage(g_hWnd,UART_MCU_INIT_OK,pBuff[4],0);
 			break; 
@@ -701,7 +717,10 @@ void McuReader::parse_single_cmd(const u_c* pBuff, int num)
 	//can info
 	else if(cmd >= 0x50 && cmd <= 0x5F)
 	{
-		
+		if(mMcuService != NULL)
+		{
+			mMcuService->notifyCanInfo(&pBuff[4], num-5);
+		}
 	}
 	else if (cmd == ARM_CMD_TV_BAR_INFO)
 	{
@@ -735,9 +754,9 @@ void McuReader::parse_single_cmd(const u_c* pBuff, int num)
 	}
 	else if(cmd == 0x88)
 	{
-		memset(getMcuDataPtr()->sSystem.mcuVer, 0, sizeof(getMcuDataPtr()->sSystem.rtkVer));
-		memcpy(getMcuDataPtr()->sSystem.mcuVer,&pBuff[4],9);
-		ALOGI("mcuVer = %s", getMcuDataPtr()->sSystem.mcuVer);	
+		memset(getMcuDataPtr()->sSettins.mcuVer, 0, sizeof(getMcuDataPtr()->sSettins.rtkVer));
+		memcpy(getMcuDataPtr()->sSettins.mcuVer,&pBuff[4],9);
+		ALOGI("mcuVer = %s", getMcuDataPtr()->sSettins.mcuVer);	
 	}
 	else if(ARM_CMD_SYSSETUP == cmd)
 	{
@@ -746,39 +765,39 @@ void McuReader::parse_single_cmd(const u_c* pBuff, int num)
 	else if(cmd == 0x8A)
 	{
 
-		getMcuDataPtr()->sSystem.freq30 = pBuff[4];
-		getMcuDataPtr()->sSystem.freq60 = pBuff[5];
-		getMcuDataPtr()->sSystem.freq125 = pBuff[6];
-		getMcuDataPtr()->sSystem.freq250 = pBuff[7];
-		getMcuDataPtr()->sSystem.freq500 = pBuff[8];
-		getMcuDataPtr()->sSystem.freq1K= pBuff[9];
-		getMcuDataPtr()->sSystem.freq2K= pBuff[10];
-		getMcuDataPtr()->sSystem.freq4K= pBuff[11];
-		getMcuDataPtr()->sSystem.freq8K= pBuff[12];
-		getMcuDataPtr()->sSystem.freq16K= pBuff[13];
-		ALOGI("0x8A = [%d]  [%d]  [%d]  [%d]  [%d]  [%d]  [%d] [%d]  [%d]  [%d]", getMcuDataPtr()->sSystem.freq30,
-			getMcuDataPtr()->sSystem.freq60,getMcuDataPtr()->sSystem.freq125,getMcuDataPtr()->sSystem.freq250,getMcuDataPtr()->sSystem.freq500,
-			getMcuDataPtr()->sSystem.freq1K,getMcuDataPtr()->sSystem.freq2K,getMcuDataPtr()->sSystem.freq4K,getMcuDataPtr()->sSystem.freq8K,
-			getMcuDataPtr()->sSystem.freq16K); 
+		getMcuDataPtr()->sSettins.freq30 = pBuff[4];
+		getMcuDataPtr()->sSettins.freq60 = pBuff[5];
+		getMcuDataPtr()->sSettins.freq125 = pBuff[6];
+		getMcuDataPtr()->sSettins.freq250 = pBuff[7];
+		getMcuDataPtr()->sSettins.freq500 = pBuff[8];
+		getMcuDataPtr()->sSettins.freq1K= pBuff[9];
+		getMcuDataPtr()->sSettins.freq2K= pBuff[10];
+		getMcuDataPtr()->sSettins.freq4K= pBuff[11];
+		getMcuDataPtr()->sSettins.freq8K= pBuff[12];
+		getMcuDataPtr()->sSettins.freq16K= pBuff[13];
+		ALOGI("0x8A = [%d]  [%d]  [%d]  [%d]  [%d]  [%d]  [%d] [%d]  [%d]  [%d]", getMcuDataPtr()->sSettins.freq30,
+			getMcuDataPtr()->sSettins.freq60,getMcuDataPtr()->sSettins.freq125,getMcuDataPtr()->sSettins.freq250,getMcuDataPtr()->sSettins.freq500,
+			getMcuDataPtr()->sSettins.freq1K,getMcuDataPtr()->sSettins.freq2K,getMcuDataPtr()->sSettins.freq4K,getMcuDataPtr()->sSettins.freq8K,
+			getMcuDataPtr()->sSettins.freq16K); 
 	}
 	else if(cmd == 0x8b)
 	{
-		getMcuDataPtr()->sSystem.trubass = pBuff[4];
-		getMcuDataPtr()->sSystem.focus = pBuff[5];
-		getMcuDataPtr()->sSystem.defintion = pBuff[6];
-		getMcuDataPtr()->sSystem.limiter = pBuff[7];
-		getMcuDataPtr()->sSystem.trubassfreq = pBuff[8];
-		getMcuDataPtr()->sSystem.space = pBuff[10];
-		getMcuDataPtr()->sSystem.center = pBuff[11];
-		ALOGI("0x8A = [%d]  [%d]  [%d]  [%d]  [%d]  [%d]  [%d] ", getMcuDataPtr()->sSystem.trubass,
-			getMcuDataPtr()->sSystem.focus,getMcuDataPtr()->sSystem.defintion,getMcuDataPtr()->sSystem.limiter,getMcuDataPtr()->sSystem.trubassfreq,
-			getMcuDataPtr()->sSystem.space,getMcuDataPtr()->sSystem.center); 
+		getMcuDataPtr()->sSettins.trubass = pBuff[4];
+		getMcuDataPtr()->sSettins.focus = pBuff[5];
+		getMcuDataPtr()->sSettins.defintion = pBuff[6];
+		getMcuDataPtr()->sSettins.limiter = pBuff[7];
+		getMcuDataPtr()->sSettins.trubassfreq = pBuff[8];
+		getMcuDataPtr()->sSettins.space = pBuff[10];
+		getMcuDataPtr()->sSettins.center = pBuff[11];
+		ALOGI("0x8A = [%d]  [%d]  [%d]  [%d]  [%d]  [%d]  [%d] ", getMcuDataPtr()->sSettins.trubass,
+			getMcuDataPtr()->sSettins.focus,getMcuDataPtr()->sSettins.defintion,getMcuDataPtr()->sSettins.limiter,getMcuDataPtr()->sSettins.trubassfreq,
+			getMcuDataPtr()->sSettins.space,getMcuDataPtr()->sSettins.center); 
 	}
 	else if(cmd == 0x8c)
 	{
-		memset(getMcuDataPtr()->sSystem.rtkVer, 0, sizeof(getMcuDataPtr()->sSystem.rtkVer));
-		memcpy(getMcuDataPtr()->sSystem.rtkVer,&pBuff[4],12);
-		ALOGI("rtkVer = %s", getMcuDataPtr()->sSystem.rtkVer);
+		memset(getMcuDataPtr()->sSettins.rtkVer, 0, sizeof(getMcuDataPtr()->sSettins.rtkVer));
+		memcpy(getMcuDataPtr()->sSettins.rtkVer,&pBuff[4],12);
+		ALOGI("rtkVer = %s", getMcuDataPtr()->sSettins.rtkVer);
 	}
 	else if(cmd == 0xB5)
 	{

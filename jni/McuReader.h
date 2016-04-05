@@ -15,6 +15,9 @@
 #include "mcu_uart/CMCUUart.h"
 #include "IncludeAll.h"
 #include "McuProvider.h"
+#include "McuService.h"
+#include <utils/threads.h>
+
 
 using namespace android;
 
@@ -22,6 +25,7 @@ class McuReader : public Thread, public McuProvider, public UartProxy
 {
 public:
 	McuReader(CMCUUart* uart);
+	McuReader(CMCUUart* uart, McuService* ms);
 	virtual ~McuReader();
 	virtual void start_read_mcu_data_loop();
 private:
@@ -31,6 +35,7 @@ private:
 	void parse_single_cmd(const u_c[], int);
 	void parse_sysinfo(const u_c[], int);
 	void parse_setupinfo(const u_c[], int);
+	McuService* mMcuService;
 };
 
 #endif

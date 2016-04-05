@@ -52,9 +52,10 @@
  
 
 #include "McuService.h"
+#include "McuWriter.h"
+#include "McuReader.h"
  
-//======================================================
-//using namespace android;
+//====================================================== 
 
 
 
@@ -83,6 +84,7 @@ McuService::McuService()
 
 McuService::~McuService()
 {
+	ALOGI("mcu service is destoryed");
 	if(m_pMcuWriter != NULL)
 	{
 		m_pMcuWriter->~McuWriter();
@@ -91,7 +93,6 @@ McuService::~McuService()
 	{
 		m_pMcuReader->~McuReader();
 	}
-    ALOGI("McuService destroyed");
 }
 
 void McuService::setMcuWriter(sp<McuWriter>& writer)
@@ -207,6 +208,18 @@ bool McuService::obtainInfo(int domain, int cmd, Parcel& out)
 			else
 			{
 				ALOGE("error:obtainInfo domain[%d], cmd[%d] was untreated", domain, cmd);
+			}
+		} break;
+		case CMD_SYSTEM_SOURCE: {
+			if(cmd == CMD_SYSTEM_SOURCE)
+			{
+				out.writeInt32(m_pMcuReader->get_system_source());
+				return true;
+			}
+			else if(cmd == CMD_SYSTEM_STATE)
+			{
+				out.writeInt32(m_pMcuReader->get_system_state());
+				return true;
 			}
 		} break;
 		default: {
@@ -453,6 +466,29 @@ bool McuService::sendInfo(int domain, int cmd, Parcel& in)
 				ALOGE("error:sendInfo domain[%d], cmd[%d] was untreated", domain, cmd);
 			}
 		} break;
+		case CMD_SYSTEM_SOURCE: {
+			if(cmd == CMD_SYSTEM_SOURCE)
+			{
+				if(&in && in.dataSize() >0)
+				{
+					int source = (in.readInt32());
+					//implements in android
+					m_pMcuReader->set_system_source(source);
+					m_pMcuWriter->sendSourceToMcu(source);
+					return true;
+				}
+			}
+			else if(cmd == CMD_SYSTEM_STATE)
+			{
+				if(&in && in.dataSize() >0)
+				{
+					int val = in.readInt32();
+					m_pMcuReader->set_system_state(val);
+					m_pMcuWriter->sendMCUState(val);
+					return true;
+				}
+			}
+		} break;
 		default: {
 			ALOGE("error:sendInfo domain[%d], cmd[%d] was untreated", domain, cmd);
 		} break;
@@ -463,11 +499,13 @@ bool McuService::registDataChanagedListener(int domain, const sp<IDataChangedLis
 {
 	ALOGI("registDataChanagedListener domain[%d] listener[%p]", domain, dataChangedListener->asBinder().get());
 
+	registClientBinderDied(domain, dataChangedListener);
+
 	if(domain == DOMAIN_RADIO)
 	{
 		if(&mRadioLists)
 		{
-			mRadioLists.push_back(dataChangedListener);
+			mRadioLists.push_back(dataChangedListener);	
 		}
 	}
 	else if(domain == DOMAIN_BT)
@@ -484,12 +522,75 @@ bool McuService::registDataChanagedListener(int domain, const sp<IDataChangedLis
 			mSettingsLists.push_back(dataChangedListener);
 		}
 	}
+	else if(domain == DOMAIN_SYSTEM)
+	{
+		if(&mSystemLists)
+		{
+			mSystemLists.push_back(dataChangedListener);
+		}
+	}
+	else if(domain == DOMAIN_MCUKEY)
+	{
+		if(&mMcuKeyLists)
+		{
+			mMcuKeyLists.push_back(dataChangedListener);
+		}
+	}
+	else if(domain == DOMAIN_CANINFO)
+	{
+		if(&mCanInfoLists)
+		{
+			mCanInfoLists.push_back(dataChangedListener);
+		}
+	}
+	
+	
 	return true;
 }
 
 bool McuService::unregistDataChanagedListener(int domain, const sp<IDataChangedListener>& dataChangedListener)
 {
 	ALOGI("unregistDataChanagedListener domain[%d] listener[%p]", domain, dataChangedListener->asBinder().get());
+	return unregistBinder(domain, dataChangedListener->asBinder());
+	
+}
+
+void McuService::onClientBinderDied(int domain, const wp<IBinder>& who)
+{
+	ALOGI("a binder client is dead, so clean up it");
+	sp<IBinder> deathclient = who.promote();
+	if(deathclient != 0)
+	{
+		unregistBinder(domain, deathclient);
+
+		//delete dead notifier client
+		List<sp<DeathNotifier> >::iterator ite;
+		for(ite = mDeathNotifiers.begin(); (*ite).get() != NULL && ite != mDeathNotifiers.end(); )
+		{
+			if((*ite)->isDied())
+			{
+				ALOGI("clean up the dead notifier[%p]", (*ite).get());
+				ite = mDeathNotifiers.erase(ite);
+			}
+			else
+			{
+				ite++;
+			}
+		}
+	}
+}
+void McuService::registClientBinderDied(int domain, const sp<IDataChangedListener>& dataChangedListener)
+{
+	sp<DeathNotifier> deathNotifier = new DeathNotifier(domain, this);
+	ALOGI("regist a client binder[%p]", deathNotifier.get());
+	mDeathNotifiers.push_back(deathNotifier);
+	dataChangedListener->asBinder()->linkToDeath(deathNotifier, this);
+	
+}
+
+bool McuService::unregistBinder(int domain, const sp<IBinder>& binder)
+{
+	ALOGI("unregistBinder domain[%d] listener[%p]", domain, binder.get());
 	if(domain == DOMAIN_RADIO)
 	{
 		if(&mRadioLists && !mRadioLists.empty())
@@ -497,7 +598,7 @@ bool McuService::unregistDataChanagedListener(int domain, const sp<IDataChangedL
 			List<sp<IDataChangedListener> >::iterator ite;
 			for(ite = mRadioLists.begin(); ite != mRadioLists.end(); ite++)
 			{
-				if((*ite)->asBinder() == dataChangedListener->asBinder())
+				if((*ite)->asBinder() == binder)
 				{
 					mRadioLists.erase(ite);
 					return true;
@@ -512,7 +613,7 @@ bool McuService::unregistDataChanagedListener(int domain, const sp<IDataChangedL
 			List<sp<IDataChangedListener> >::iterator ite;
 			for(ite = mBTLists.begin(); ite != mBTLists.end(); ite++)
 			{
-				if((*ite)->asBinder() == dataChangedListener->asBinder())
+				if((*ite)->asBinder() == binder)
 				{
 					mBTLists.erase(ite);
 					return true;
@@ -527,7 +628,7 @@ bool McuService::unregistDataChanagedListener(int domain, const sp<IDataChangedL
 			List<sp<IDataChangedListener> >::iterator ite;
 			for(ite = mSettingsLists.begin(); ite != mSettingsLists.end(); ite++)
 			{
-				if((*ite)->asBinder() == dataChangedListener->asBinder())
+				if((*ite)->asBinder() == binder)
 				{
 					mSettingsLists.erase(ite);
 					return true;
@@ -536,9 +637,74 @@ bool McuService::unregistDataChanagedListener(int domain, const sp<IDataChangedL
 		}
 		
 	}
+	else if(domain == DOMAIN_SYSTEM)
+	{
+		if(&mSystemLists && !mSystemLists.empty())
+		{
+			List<sp<IDataChangedListener> >::iterator ite;
+			for(ite = mSystemLists.begin(); ite != mSystemLists.end(); ite++)
+			{
+				if((*ite)->asBinder() == binder)
+				{
+					mSystemLists.erase(ite);
+					return true;
+				}
+			}
+		}
+	}
+	else if(domain == DOMAIN_MCUKEY)
+	{
+		if(&mMcuKeyLists && !mMcuKeyLists.empty())
+		{
+			List<sp<IDataChangedListener> >::iterator ite;
+			for(ite = mMcuKeyLists.begin(); ite != mMcuKeyLists.end(); ite++)
+			{
+				if((*ite)->asBinder() == binder)
+				{
+					mMcuKeyLists.erase(ite);
+					return true;
+				}
+			}
+		}
+	}
+	else if(domain == DOMAIN_CANINFO)
+	{
+		if(&mCanInfoLists && !mCanInfoLists.empty())
+		{
+			List<sp<IDataChangedListener> >::iterator ite;
+			for(ite = mCanInfoLists.begin(); ite != mCanInfoLists.end(); ite++)
+			{
+				if((*ite)->asBinder() == binder)
+				{
+					mCanInfoLists.erase(ite);
+					return true;
+				}
+			}
+		}
+	}
 	return false;
-	
 }
+
+bool McuService::notifyHardKey(int key)
+{
+	Parcel to;
+	to.setDataPosition(0);
+	to.writeInt32(key);
+	to.writeInt32(0);
+	notifyDataChanagedListener(DOMAIN_MCUKEY, to);
+	return true;
+}
+
+bool McuService::notifyCanInfo(const u_c* buff, int len)
+{
+	Parcel to;
+	to.setDataPosition(0);
+	to.writeInt32(len);
+	to.writeByteArray(len, buff);
+	notifyDataChanagedListener(DOMAIN_CANINFO, to);
+	return true;
+}
+
 bool McuService::notifyDataChanagedListener(int domain, Parcel& data)
 {
 	if(domain == DOMAIN_RADIO)
@@ -580,8 +746,48 @@ bool McuService::notifyDataChanagedListener(int domain, Parcel& data)
 		}
 		return true;
 	}
+	else if(domain == DOMAIN_SYSTEM)
+	{
+		ALOGI("system info has changed, so dispatcher it");
+		if(!mSystemLists.empty())
+		{
+			List<sp<IDataChangedListener> >::iterator ite;
+			for(ite = mSystemLists.begin(); ite != mSystemLists.end(); ite++)
+			{
+				(*ite)->notify(DOMAIN_SYSTEM, 5, 6, &data);
+			}
+		}
+		return true;
+	}
+	else if(domain == DOMAIN_MCUKEY)
+	{
+		ALOGI("mcu key info has changed, so dispatcher it");
+		if(!mMcuKeyLists.empty())
+		{
+			List<sp<IDataChangedListener> >::iterator ite;
+			for(ite = mMcuKeyLists.begin(); ite != mMcuKeyLists.end(); ite++)
+			{
+				(*ite)->notify(DOMAIN_MCUKEY, 5, 6, &data);
+			}
+		}
+		return true;
+	}
+	else if(domain == DOMAIN_CANINFO)
+	{
+		ALOGI("can info has changed, so dispatcher it");
+		if(!mCanInfoLists.empty())
+		{
+			List<sp<IDataChangedListener> >::iterator ite;
+			for(ite = mCanInfoLists.begin(); ite != mCanInfoLists.end(); ite++)
+			{
+				(*ite)->notify(DOMAIN_MCUKEY, 5, 6, &data);
+			}
+		}
+		return true;
+	}
 	return false;
 } 
 
 
 }// namespace android
+

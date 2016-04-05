@@ -39,6 +39,7 @@ CMCUUart::CMCUUart()
 
 CMCUUart::~CMCUUart()
 {
+	ALOGI("mcu uart destory...");
 	closeUartDev();
 	m_bUartOpen = false;
 	m_fd = -1;
