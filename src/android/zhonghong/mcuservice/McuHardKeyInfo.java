@@ -6,7 +6,8 @@ import android.view.KeyEvent;
 
 public class McuHardKeyInfo implements Parcelable {
 
-	//鍙互鎵╁紶锛屼絾鏄繖涓D蹇呴』鍜宑++鏈嶅姟绔殑鍊间竴鑷D	//	
+	//可以扩张，但是这个值必须和c++服务端的值一致
+	//
 	public static final int HARDKEY_DOMAIN = 400;
 	
 	public static final int KEYCODE_MODE = 1001;
@@ -49,7 +50,8 @@ public class McuHardKeyInfo implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel parcel, int arg1) {
 		// TODO Auto-generated method stub
-		//java绔殑灏佸寘蹇呴』鍜宑++鏈嶅姟绔殑瑙ｅ寘涓D嚧銆傛殏鏃舵病鏈夌敤鍒D		parcel.writeInt(getKeyCode());
+		//java端的封包必须和c++服务端的解包一致。暂时没有用到
+		parcel.writeInt(getKeyCode());
 		parcel.writeInt(getKeyStatus());
 	}
 
@@ -58,7 +60,8 @@ public class McuHardKeyInfo implements Parcelable {
 		@Override
 		public McuHardKeyInfo createFromParcel(Parcel source) {
 			// TODO Auto-generated method stub
-			//java绔殑瑙ｅ寘蹇呴』鍜宑++鏈嶅姟绔殑灏佸寘涓D嚧銆D			McuHardKeyInfo key = new McuHardKeyInfo();
+			//java端的解包必须和c++服务端的封包一致。
+			McuHardKeyInfo key = new McuHardKeyInfo();
 			key.setKeyCode(source.readInt());
 			key.setKeyStatus(source.readInt());
 			return key;

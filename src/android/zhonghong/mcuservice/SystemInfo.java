@@ -6,7 +6,8 @@ import android.os.Parcelable.Creator;
 
 public class SystemInfo implements Parcelable {
 	
-	//鍙互鎵╁紶锛屼絾鏄繖涓D蹇呴』鍜宑++鏈嶅姟绔殑鍊间竴鑷D	//
+	//可以扩张，但是这个值必须和c++服务端的值一致
+	//
 	public static final int SYSTEM_DOMAIN = 300;
 	public static final int SYSTEM_ACCON = 301;
 	public static final int SYSTEM_SOURCE = 302;
@@ -43,7 +44,8 @@ public class SystemInfo implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel to, int arg1) {
 		// TODO Auto-generated method stub
-		//parcel 4 瀛楄妭瀵归綈锛屾渶灏忕殑鍐欏叆鍗曚綅鏄D涓瓧鑺D		to.writeInt(isAccon()?1:0);
+		//java端的封包必须和c++服务端的解包一致。暂时没有用到	
+		to.writeInt(isAccon()?1:0);
 		to.writeInt(getMcuSource());
 		to.writeInt(getMcuState());
 	}
@@ -53,7 +55,8 @@ public class SystemInfo implements Parcelable {
 		@Override
 		public SystemInfo createFromParcel(Parcel source) {
 			// TODO Auto-generated method stub
-			//java绔殑瑙ｅ寘蹇呴』鍜宑++鏈嶅姟绔殑灏佸寘涓D嚧銆D			SystemInfo system = new SystemInfo();
+			//java端的解包必须和c++服务端的封包一致。	
+			SystemInfo system = new SystemInfo();
 			system.setAccon(source.readInt()==1);
 			system.setMcuSource(source.readInt());
 			system.setMcuState(source.readInt());
