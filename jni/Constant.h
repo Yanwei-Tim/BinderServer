@@ -102,6 +102,7 @@ enum {
 };
 enum {
 	DOMAIN_CANINFO = 500,
+	CMD_SEND_CAN_DATA = 501,
 };
 
 

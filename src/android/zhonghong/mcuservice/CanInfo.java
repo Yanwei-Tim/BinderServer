@@ -5,6 +5,7 @@ import android.os.Parcel;
 public class CanInfo {
 
 	public static final int CANINFO_DOMAIN = 500;
+	public static final int CANINFO_SEND_CAN_DATA =501;
 	
 	public static short[] toShortArray(byte[] arr)
 	{

@@ -107,6 +107,9 @@ public:
 	void sendSourceVaildBitToMcu(u_c SourceVaildBit);
 	bool isHangLongCustomer();
 	void sendSourceToMcu(int source);
+
+	bool sendCanDataToMcu(u_c[] data, len);
+
 private:
 	sp<McuReader> m_pMcuReader;
 };

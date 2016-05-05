@@ -1,12 +1,18 @@
 package android.zhonghong.mcuservice;
 
 import android.os.Parcel;
+import android.os.IBinder.DeathRecipient;
 
 public class SystemProxy {
 
 	public boolean registSystemInfoChangedListener(RegistManager.ISystemInfoChangedListener listener)
 	{
 		return RegistManager.getInstance().addSystemInfoChangedListener(listener);
+	}
+	
+	public boolean unregistSystemInfoChangedListener(RegistManager.ISystemInfoChangedListener listener)
+	{
+		return RegistManager.getInstance().removeSystemInfoChangedListener(listener);
 	}
 	
 	public SystemInfo getSystemInfo()
@@ -38,5 +44,17 @@ public class SystemProxy {
 	{
 		return McuManagerService.getInstance().getInt(SystemInfo.SYSTEM_DOMAIN, SystemInfo.SYSTEM_STATE);
 	}
+	
+	// 注册服务端进程死亡通知， 
+	public boolean registDeathRecipient(DeathRecipient deathCallback)
+	{
+		return McuManagerService.getInstance().registDeathListener(deathCallback);
+	}
+	//	注销服务端进程死亡通知。
+	public boolean unregistDeathRecipient(DeathRecipient deathCallback)
+	{
+		return McuManagerService.getInstance().unregistDeathListener(deathCallback);
+	}
+	
 }
 

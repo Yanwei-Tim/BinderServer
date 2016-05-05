@@ -6,7 +6,7 @@ import android.os.Parcelable.Creator;
 
 public class SystemInfo implements Parcelable {
 	
-	//¿ÉÒÔÀ©ÕÅ£¬µ«ÊÇÕâ¸öÖµ±ØĞëºÍc++·şÎñ¶ËµÄÖµÒ»ÖÂ
+	//å¯ä»¥æ‰©å¼ ï¼Œä½†æ˜¯è¿™ä¸ªå€¼å¿…é¡»å’Œc++æœåŠ¡ç«¯çš„å€¼ä¸€è‡´
 	//
 	public static final int SYSTEM_DOMAIN = 300;
 	public static final int SYSTEM_ACCON = 301;
@@ -44,7 +44,7 @@ public class SystemInfo implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel to, int arg1) {
 		// TODO Auto-generated method stub
-		//java¶ËµÄ·â°ü±ØĞëºÍc++·şÎñ¶ËµÄ½â°üÒ»ÖÂ¡£ÔİÊ±Ã»ÓĞÓÃµ½	
+		//javaç«¯çš„å°åŒ…å¿…é¡»å’Œc++æœåŠ¡ç«¯çš„è§£åŒ…ä¸€è‡´ã€‚æš‚æ—¶æ²¡æœ‰ç”¨åˆ°	
 		to.writeInt(isAccon()?1:0);
 		to.writeInt(getMcuSource());
 		to.writeInt(getMcuState());
@@ -55,7 +55,7 @@ public class SystemInfo implements Parcelable {
 		@Override
 		public SystemInfo createFromParcel(Parcel source) {
 			// TODO Auto-generated method stub
-			//java¶ËµÄ½â°ü±ØĞëºÍc++·şÎñ¶ËµÄ·â°üÒ»ÖÂ¡£	
+			//javaç«¯çš„è§£åŒ…å¿…é¡»å’Œc++æœåŠ¡ç«¯çš„å°åŒ…ä¸€è‡´ã€‚	
 			SystemInfo system = new SystemInfo();
 			system.setAccon(source.readInt()==1);
 			system.setMcuSource(source.readInt());

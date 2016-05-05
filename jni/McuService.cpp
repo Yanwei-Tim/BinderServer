@@ -466,7 +466,7 @@ bool McuService::sendInfo(int domain, int cmd, Parcel& in)
 				ALOGE("error:sendInfo domain[%d], cmd[%d] was untreated", domain, cmd);
 			}
 		} break;
-		case CMD_SYSTEM_SOURCE: {
+		case DOMAIN_SYSTEM: {
 			if(cmd == CMD_SYSTEM_SOURCE)
 			{
 				if(&in && in.dataSize() >0)
@@ -486,6 +486,24 @@ bool McuService::sendInfo(int domain, int cmd, Parcel& in)
 					m_pMcuReader->set_system_state(val);
 					m_pMcuWriter->sendMCUState(val);
 					return true;
+				}
+			}
+		} break;
+		case DOMAIN_CANINFO: {
+			if(cmd == CMD_SEND_CAN_DATA)
+			{
+				if(&in && in.dataSize() >0)
+				{
+					int len = (in.readInt32());
+					ALOGI("send can data len[0x%x], dataAvail[0x%x]", len, in.dataAvail());
+					if(in.dataAvail() >= len)
+					{
+						u_c data[] = new u_c[len];
+						in.read(data, len);
+						bool res = m_pMcuWriter->sendCanDataToMcu(data, len);
+						delete data;
+						return res;
+					}
 				}
 			}
 		} break;
@@ -780,7 +798,7 @@ bool McuService::notifyDataChanagedListener(int domain, Parcel& data)
 			List<sp<IDataChangedListener> >::iterator ite;
 			for(ite = mCanInfoLists.begin(); ite != mCanInfoLists.end(); ite++)
 			{
-				(*ite)->notify(DOMAIN_MCUKEY, 5, 6, &data);
+				(*ite)->notify(DOMAIN_CANINFO, 5, 6, &data);
 			}
 		}
 		return true;

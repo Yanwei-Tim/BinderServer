@@ -199,7 +199,7 @@ void McuCommands::sendCCDHaveSingToMcu()
 	getUart()->writeUart(buffSendData,6);
 }
 
-bool McuCommands::sendLanguageInfoToMcu(u_c data1, u_c data2)//ÓïÑÔ¸ü¸Ä
+bool McuCommands::sendLanguageInfoToMcu(u_c data1, u_c data2)//ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½
 {
 	u_c buffSendData[6] = {0xFF,0xAA,0xA0,data1,data2,0x0A};
 	getUart()->writeUart(buffSendData,6);
@@ -622,7 +622,7 @@ bool McuCommands::sendCanDataRpt(u_c *pData, int num, int Rpt100ms)
 	pbuffSendData[1] = 0xAA;
 	pbuffSendData[2] = ARM_COMMAND_CAN_DATA_RPT;
 	pbuffSendData[3] = (u_c)len;
-	pbuffSendData[4] = 0;	//±£Áô
+	pbuffSendData[4] = 0;	//ï¿½ï¿½ï¿½ï¿½
 	pbuffSendData[5] = (u_c)Rpt100ms;
 	memcpy(&pbuffSendData[6], pData, num);
 	pbuffSendData[len-1] = 0x0A;
@@ -691,6 +691,10 @@ void McuCommands::sendSourceVaildBitToMcu(u_c SourceVaildBit)
 	getUart()->writeUart(buffSendData,6);
 }
 
+bool McuCommands::sendCanDataToMcu(u_c[] data, int len)
+{
+	return getUart()->writeUart(data,len);
+}
 
 
 

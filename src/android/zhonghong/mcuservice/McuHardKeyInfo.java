@@ -6,7 +6,7 @@ import android.view.KeyEvent;
 
 public class McuHardKeyInfo implements Parcelable {
 
-	//¿ÉÒÔÀ©ÕÅ£¬µ«ÊÇÕâ¸öÖµ±ØĞëºÍc++·şÎñ¶ËµÄÖµÒ»ÖÂ
+	//å¯ä»¥æ‰©å¼ ï¼Œä½†æ˜¯è¿™ä¸ªå€¼å¿…é¡»å’Œc++æœåŠ¡ç«¯çš„å€¼ä¸€è‡´
 	//
 	public static final int HARDKEY_DOMAIN = 400;
 	
@@ -50,7 +50,7 @@ public class McuHardKeyInfo implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel parcel, int arg1) {
 		// TODO Auto-generated method stub
-		//java¶ËµÄ·â°ü±ØĞëºÍc++·şÎñ¶ËµÄ½â°üÒ»ÖÂ¡£ÔİÊ±Ã»ÓĞÓÃµ½
+		//javaç«¯çš„å°åŒ…å¿…é¡»å’Œc++æœåŠ¡ç«¯çš„è§£åŒ…ä¸€è‡´ã€‚æš‚æ—¶æ²¡æœ‰ç”¨åˆ°
 		parcel.writeInt(getKeyCode());
 		parcel.writeInt(getKeyStatus());
 	}
@@ -60,7 +60,7 @@ public class McuHardKeyInfo implements Parcelable {
 		@Override
 		public McuHardKeyInfo createFromParcel(Parcel source) {
 			// TODO Auto-generated method stub
-			//java¶ËµÄ½â°ü±ØĞëºÍc++·şÎñ¶ËµÄ·â°üÒ»ÖÂ¡£
+			//javaç«¯çš„è§£åŒ…å¿…é¡»å’Œc++æœåŠ¡ç«¯çš„å°åŒ…ä¸€è‡´ã€‚
 			McuHardKeyInfo key = new McuHardKeyInfo();
 			key.setKeyCode(source.readInt());
 			key.setKeyStatus(source.readInt());

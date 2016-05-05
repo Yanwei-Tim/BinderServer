@@ -14,5 +14,15 @@ public class CanProxy {
 		return RegistManager.getInstance().removeCanInfoChangedListener(listener);
 	}
 	
+	/**
+	 *	发送数据给can
+	 *	一般是can app调用这个方法。
+	 * 	@param data 发送给can的byte数组需要根据can协议来封装。同时也要符合mcu的数据格式
+	 */
+	public boolean sendCanData(byte[] data)
+	{
+		return McuManagerService.getInstance().sendByteArray(CanInfo.CANINFO_DOMAIN, CanInfo.CANINFO_SEND_CAN_DATA, data);
+	}
+	
 }
 

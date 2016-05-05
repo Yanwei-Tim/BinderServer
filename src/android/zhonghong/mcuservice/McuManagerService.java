@@ -1,6 +1,7 @@
 package android.zhonghong.mcuservice;
 
 import android.os.IBinder;
+import android.os.IBinder.DeathRecipient;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
@@ -158,6 +159,27 @@ public class McuManagerService {
 		}
 		return false;
 	}
+	
+	public boolean sendByteArray(int domain, int cmd, byte[] data)
+	{
+		Parcel p = Parcel.obtain();
+		try {
+			if(mcuService == null)
+			{
+				getIMcuService();
+			}
+			p.writeByteArray(data);
+			boolean result  = mcuService.sendInfo(domain, cmd, p);
+			return result;
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			p.recycle();
+		}
+		return false;
+	}
+	
 	public boolean registDataChangedListener(int domain, IDataChangedListener listener)
 	{
 		try {
@@ -173,6 +195,7 @@ public class McuManagerService {
 		}
 		return false;
 	}
+	
 	public boolean unregistDataChangedListener(int domain, IDataChangedListener listener)
 	{
 		try {
@@ -188,4 +211,36 @@ public class McuManagerService {
 		}
 		return false;
 	}
+	
+	public boolean registDeathListener(DeathRecipient death)
+	{
+		try {
+			if(mcuService == null)
+			{
+				getIMcuService();
+			}
+			mcuService.asBinder().linkToDeath(death, 0);
+			return true;
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public boolean unregistDeathListener(DeathRecipient death)
+	{
+		try {
+			if(mcuService == null)
+			{
+				getIMcuService();
+			}
+			mcuService.asBinder().unlinkToDeath(death, 0);
+			return true;
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 }

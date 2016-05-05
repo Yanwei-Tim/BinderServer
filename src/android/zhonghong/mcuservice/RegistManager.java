@@ -1,3 +1,10 @@
+/** 
+* @author leo
+* @version 2016-05-05
+* 注册回调监听管理类。单例模式。addXXXInfoChangedListener和removeXXXInfoChangedListener来注册和反注册监听
+* 监听只在服务端注册一次，如果一个进程监听多次同一个监听，监听返回时分发给多个监听。
+* 
+*/
 package android.zhonghong.mcuservice;
 
 import java.util.List;
@@ -6,6 +13,7 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
+
 
 public class RegistManager {
 
@@ -28,7 +36,6 @@ public class RegistManager {
 	private List<ISystemInfoChangedListener> mSystemInfoChangedListeners = null;
 	private List<IMcuHardKeyChangedListener> mMcuHardKeyInfoChangedListeners = null;
 	private List<ICanInfoChangedListener> mCanInfoChangedListeners = null;
-	
 	
 	//radio
 	protected boolean addRadioInfoChangedListener(IRadioInfoChangedListener listener)
@@ -312,8 +319,6 @@ public class RegistManager {
 		return false;
 	}
 	
-	
-	
 	DataChangedListener radioDataChangedListener = null;
 	//only regist once from mcuserver
 	private void registRadioInfoChangedListener()
@@ -330,6 +335,7 @@ public class RegistManager {
 		if(radioDataChangedListener != null)
 		{
 			McuManagerService.getInstance().unregistDataChangedListener(RadioInfo.RADIO_DOMAIN, radioDataChangedListener);
+			radioDataChangedListener = null;
 		}
 	}
 	
@@ -348,6 +354,7 @@ public class RegistManager {
 		if(btDataChangedListener != null)
 		{
 			McuManagerService.getInstance().unregistDataChangedListener(BTInfo.BT_DOMAIN, btDataChangedListener);
+			btDataChangedListener = null;
 		}
 	}
 	
@@ -367,6 +374,7 @@ public class RegistManager {
 		if(settingsDataChangedListener != null)
 		{
 			McuManagerService.getInstance().unregistDataChangedListener(SettingsInfo.SETTINGS_DOMAIN, settingsDataChangedListener);
+			settingsDataChangedListener = null;
 		}
 	}
 	
@@ -385,6 +393,7 @@ public class RegistManager {
 		if(systemDataChangedListener != null)
 		{
 			McuManagerService.getInstance().unregistDataChangedListener(SystemInfo.SYSTEM_DOMAIN, systemDataChangedListener);
+			systemDataChangedListener = null;
 		}
 	}
 	
@@ -404,6 +413,7 @@ public class RegistManager {
 		if(mcuHardKeyChangedListener != null)
 		{
 			McuManagerService.getInstance().unregistDataChangedListener(McuHardKeyInfo.HARDKEY_DOMAIN, mcuHardKeyChangedListener);
+			mcuHardKeyChangedListener = null;
 		}
 	}
 	
@@ -423,10 +433,9 @@ public class RegistManager {
 		if(canInfoChangedListener != null)
 		{
 			McuManagerService.getInstance().unregistDataChangedListener(CanInfo.CANINFO_DOMAIN, canInfoChangedListener);
+			canInfoChangedListener = null;
 		}
 	}
-	
-	
 	
 	private void doNotify(int msg, int ext0, int ext1, Parcel parcel)
 	{
