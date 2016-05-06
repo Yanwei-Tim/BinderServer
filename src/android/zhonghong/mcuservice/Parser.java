@@ -14,23 +14,23 @@ import android.util.Log;
 public abstract class Parser {
 	
 	/**
-	 * 解析数据�Dbr>
-	 * <font color="red">该函数式虚函数，必须继承该函�D/font>
+	 * 解析数据包<br>
+	 * <font color="red">该函数式虚函数，必须继承该函数</font>
 	 * 
-	 * @param buff can发�D过来的buff，注意：buff.length = 128
-	 * @param len can发�D过来的buff的实际长�D
+	 * @param buff can发送过来的buff，注意：buff.length = 128，但是实际长度不是这个
+	 * @param len can发送过来的buff的实际长度
 	 */
 	abstract public void parsePacket(byte[] buff, int len);
 	
 	/**
-	 * 组装数据�Dbr>
-	 * <font color="red">该函数式虚函数，必须继承该函�D/font>
+	 * 组装数据包<br>
+	 * <font color="red">该函数式虚函数，必须继承该函数</font>
 	 * 
-	 * @param cmd 自定义的cmd，根据cmd封装成不同的数据包�D
-	 * @param b0 封装到数据包里面的数据�D
-	 * @param b1 封装到数据包里面的数据�D
-	 * @param b2 封装到数据包里面的数据�D
-	 * @param b3 封装到数据包里面的数据�D
+	 * @param cmd 自定义的cmd，根据cmd封装成不同的数据包
+	 * @param b0 封装到数据包里面的数据包
+	 * @param b1 封装到数据包里面的数据包
+	 * @param b2 封装到数据包里面的数据包
+	 * @param b3 封装到数据包里面的数据包
 	 */
 	abstract public byte[] encapsulatePacket(int cmd, byte b0, byte b1, byte b2, byte b3);
 	
@@ -51,11 +51,11 @@ public abstract class Parser {
 	public static final short BIT7 = 128;
 	
 	/**
-	 * 将can传过来的byte转换成java的byte�Dbr>
-	 * can的byte�D��是无符号的，范围�D~255<br>
-	 * java的byte是有符号的，范围�D128~127.
+	 * 将can传过来的byte转换成java的byte<br>
+	 * can的byte是无符号的，是c++那边发送过来的，范围是0~255<br>
+	 * java的byte是有符号的，范围是-128~127.
 	 * 
-	 * @parma bit �D��转换的byte
+	 * @parma b 需要转换的byte
 	 */
 	public static short toUnsigned(byte b)
 	{
@@ -63,10 +63,10 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 把byte中的某一位转�D��boolean
+	 * 把byte中的某一位转换成boolean， 等于0是FALSE，非零就是true
 	 * 
-	 * @param b �D��的byte
-	 * @param bit �D��获取的第几位，如BIT4则传4，BIT0则传0
+	 * @param b 需要转换的byte
+	 * @param bit 获取的第几位，如BIT4则传4，BIT0则传0
 	 */
 	public static boolean getBooleanByBit(byte b, int bit)
 	{
@@ -82,10 +82,10 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 获取byte中连续几个bit位的int�D
+	 * 获取byte中连续几个bit位的int值
 	 * 
-	 * @param b �D��的byte
-	 * @parma bit �D��获取�D��位是第几位，如BIT5和BIT4则传4，BIT0、BIT1和BIT2则传0
+	 * @param b 需要转换的byte
+	 * @parma bit 开始获取位是第几位，如BIT5和BIT4则传4（开始位是4），BIT0、BIT1和BIT2则传0（开始位是0）
 	 * @param len 是需要获取几位的值，BIT5和BIT4则传2，BIT0、BIT1和BIT2则传3
 	 */
 	public int getIntByBits(byte b, int bit, int len)
@@ -101,12 +101,12 @@ public abstract class Parser {
 	
 	/**
 	 * 重载函数<br>
-	 * �D��can数据包的�D��和是否正�D
+	 * 检查数据包的校验和是否正确
 	 * 
-	 * @param b �D��的byte
-	 * @parma start_index �D���D
-	 * @param len �D��几位的和来检查校验和
-	 * @param checksum_index �D��和在第几�D
+	 * @param b 需要检查的byte
+	 * @parma start_index 起始位
+	 * @param len 需要用几位的和来检查校验和
+	 * @param checksum_index 校验和在第几位
 	 * 
 	 */
 	public static boolean isLegalCheckSumByLen(byte[] b, int start_index, int len, int checksum_index)
@@ -135,12 +135,12 @@ public abstract class Parser {
 	
 	/**
 	 * 重载函数<br>
-	 * �D��can数据包的�D��和是否正�D
+	 * 检查can数据包的校验和是否正确
 	 * 
-	 * @param b �D��的byte
-	 * @parma start_index �D��位�D
-	 * @param end_index 结束�D
-	 * @param checksum_index �D��和在第几�D
+	 * @param b 需要检查的byte
+	 * @parma start_index 起始位
+	 * @param end_index 结束位
+	 * @param checksum_index checksum在第几位。
 	 */
 	public static boolean isLegalCheckSumByIndex(byte[] b, int start_index, int end_index, int checksum_index)
 	{
@@ -167,12 +167,12 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 获取can数据包的�D���Dbr>
+	 * 获取can数据包的checksun<br>
 	 * 用于封装数据包发生给can
 	 * 
-	 * @param b �D��的byte
-	 * @parma int start_index�D��位�D
-	 * @param int end_index结束�D
+	 * @param b 需要的byte
+	 * @parma int start_index 起始位
+	 * @param int end_index结束位
 	 * 
 	 */
 	public static byte getCheckSumByIndex(byte[] b, int start_index, int end_index)
@@ -194,12 +194,12 @@ public abstract class Parser {
 	
 	/**
 	 * 重载函数<br>
-	 * 获取can数据包的�D���Dbr>
+	 * 获取can数据包的checksum<br>
 	 * 用于封装数据包发生给can
 	 * 
-	 * @param b �D��的byte
-	 * @parma start_index �D���D
-	 * @param len �D���D��多少位和来计算校验和
+	 * @param b 需要的byte
+	 * @parma start_index 起始位
+	 * @param len 需要多少位和来计算校验和
 	 */
 	public static byte getCheckSumByLen(byte[] b, int start_index, int len)
 	{
@@ -218,13 +218,13 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 获取can数据包的�D���Dbr>
+	 * 获取can数据包的checksum<br>
 	 * 用于封装数据包发生给can
 	 * 
-	 * @param b �D��的byte
-	 * @parma start_index �D���D
-	 * @param len �D���D��多少位和来计算校验和
-	 * @param check_index �D��和放在哪�D��
+	 * @param b 需要用到的的byte
+	 * @parma start_index 起始位
+	 * @param len 需要多少位和来计算校验和
+	 * @param check_index checksum要放在哪一位
 	 */
 	public static byte[] completeCheckSum(byte[] b, int start_index, int len, int checksum_index)
 	{
@@ -246,12 +246,12 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 获取can数据包的�D���Dbr>
+	 * 获取can数据包的checksum<br>
 	 * 用于封装数据包发生给can
 	 * 
-	 * @param b �D��的byte
-	 * @parma start_index �D��位�D
-	 * @param len �D���D��多少位和来计算校验和
+	 * @param b byte
+	 * @parma start_index 起始位
+	 * @param len 需要多少位和来计算校验和
 	 * 
 	 */
 	public static byte[] completeCheckSum(byte[] b, int start_index, int len)
@@ -272,7 +272,7 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 获取mcu发�D�D��数据包给can
+	 * 获取mcu发送的数据包给can
 	 * 
 	 * @param canPacket can的数据包 
 	 * 
@@ -301,7 +301,7 @@ public abstract class Parser {
 	
 	/**
 	 * 获取循环发给can的数据包<br>
-	 * app发�D�D��给mcu，mcu会记住这个包，每隔一定时间循环发送�D
+	 * app发送给mcu，mcu会记住这个包，每隔一定时间循环发送
 	 * 
 	 * @param canPacket:can 的数据包
 	 * 
@@ -330,8 +330,8 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * 获取cancle循环发给can的数据包<br>
-	 * app发�D�D��给mcu，mcu会记住这个包，每隔一定时间循环发送�D
+	 * 获取循环发给can的数据包<br>
+	 * app发送给mcu，mcu会记住这个包，每隔一定时间循环发送
 	 * 
 	 * @param canPacket can 的数据包
 	 * 

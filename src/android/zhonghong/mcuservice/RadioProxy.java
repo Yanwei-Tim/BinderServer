@@ -1,3 +1,11 @@
+/** 
+* @author leo
+* @version 2016-05-06
+* 收音机信息帮助类，通过这个类可以获取收音机的信息，最好使用静态对象。
+* getXXX获取单个信息，setXXX设置单个信息，getRadio方法获取收音机的整个信息
+* registRadioInfoChangedListener注册收音机的回调信息。
+*/
+
 package android.zhonghong.mcuservice;
 
 import android.os.Parcel;
@@ -7,7 +15,6 @@ import android.util.Log;
 public class RadioProxy {
 
 	private static final String TAG = "RadioProxy";
-	
 	
 	public boolean registRadioInfoChangedListener(RegistManager.IRadioInfoChangedListener listener)
 	{

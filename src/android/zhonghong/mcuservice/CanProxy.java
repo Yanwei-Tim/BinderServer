@@ -1,3 +1,10 @@
+/** 
+* @author leo
+* @version 2016-05-06
+* canä¿¡æ¯å¸®åŠ©ç±»ï¼Œé€šè¿‡è¿™ä¸ªç±»å¯ä»¥è·å–cançš„ä¿¡æ¯ï¼Œæœ€å¥½ä½¿ç”¨é™æ€å¯¹è±¡ã€‚
+* 
+*/
+
 package android.zhonghong.mcuservice;
 
 import android.os.Parcel;
@@ -15,14 +22,13 @@ public class CanProxy {
 	}
 	
 	/**
-	 *	·¢ËÍÊı¾İ¸øcan
-	 *	Ò»°ãÊÇcan appµ÷ÓÃÕâ¸ö·½·¨¡£
-	 * 	@param data ·¢ËÍ¸øcanµÄbyteÊı×éĞèÒª¸ù¾İcanĞ­ÒéÀ´·â×°¡£Í¬Ê±Ò²Òª·ûºÏmcuµÄÊı¾İ¸ñÊ½
+	 *	å‘é€æ•°æ®ç»™can
+	 *	ä¸€èˆ¬æ˜¯can appè°ƒç”¨è¿™ä¸ªæ–¹æ³•ã€‚
+	 * 	@param data å‘é€ç»™cançš„byteæ•°ç»„éœ€è¦æ ¹æ®canåè®®æ¥å°è£…ã€‚åŒæ—¶ä¹Ÿè¦ç¬¦åˆmcuçš„æ•°æ®æ ¼å¼
 	 */
 	public boolean sendCanData(byte[] data)
 	{
 		return McuManagerService.getInstance().sendByteArray(CanInfo.CANINFO_DOMAIN, CanInfo.CANINFO_SEND_CAN_DATA, data);
 	}
-	
 }
 

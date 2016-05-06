@@ -1,3 +1,10 @@
+/** 
+* @author leo
+* @version 2016-05-06
+* 系统信息帮助类，通过这个类可以获取系统的信息，最好使用静态对象。
+* 
+*/
+
 package android.zhonghong.mcuservice;
 
 import android.os.Parcel;
@@ -45,12 +52,12 @@ public class SystemProxy {
 		return McuManagerService.getInstance().getInt(SystemInfo.SYSTEM_DOMAIN, SystemInfo.SYSTEM_STATE);
 	}
 	
-	// ע�����˽�������֪ͨ�� 
+	// 注册服务端进程死亡通知， 
 	public boolean registDeathRecipient(DeathRecipient deathCallback)
 	{
 		return McuManagerService.getInstance().registDeathListener(deathCallback);
 	}
-	//	ע������˽�������֪ͨ��
+	//	注销服务端进程死亡通知。
 	public boolean unregistDeathRecipient(DeathRecipient deathCallback)
 	{
 		return McuManagerService.getInstance().unregistDeathListener(deathCallback);

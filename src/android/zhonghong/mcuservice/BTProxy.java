@@ -1,3 +1,10 @@
+/** 
+* @author leo
+* @version 2016-05-06
+* 蓝牙信息帮助类，通过这个类可以获取蓝牙的信息，最好使用静态对象。
+* 
+*/
+
 package android.zhonghong.mcuservice;
 
 import android.os.Parcel;

@@ -71,7 +71,6 @@ public class BTInfo implements Parcelable {
 			// TODO Auto-generated method stub
 			return new BTInfo[arg0];
 		}
-	
 	};
 	
 	@Override
