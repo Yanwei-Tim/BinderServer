@@ -1,4 +1,5 @@
 # BinderServer
+MCU Binder 服务// 使用JNI binder//
 c++写的binder服务，java写的binder客户端
 
 //20160405
